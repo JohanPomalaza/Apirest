@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "EhuIA1QHlUClF1yP5U9r9azMsijOVu/4XxTIOThM59c=",
+  "Source": "Apirest",
+  "BasePath": "_content/Apirest",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
