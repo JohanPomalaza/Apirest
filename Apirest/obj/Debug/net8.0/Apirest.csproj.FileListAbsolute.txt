@@ -88,3 +88,4 @@ C:\Users\johan\source\repos\Apirest\Apirest\obj\Debug\net8.0\refint\Apirest.dll
 C:\Users\johan\source\repos\Apirest\Apirest\obj\Debug\net8.0\Apirest.pdb
 C:\Users\johan\source\repos\Apirest\Apirest\obj\Debug\net8.0\Apirest.genruntimeconfig.cache
 C:\Users\johan\source\repos\Apirest\Apirest\obj\Debug\net8.0\ref\Apirest.dll
+C:\Users\johan\source\repos\Apirest\Apirest\obj\Debug\net8.0\Apirest.sourcelink.json
