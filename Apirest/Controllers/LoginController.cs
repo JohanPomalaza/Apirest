@@ -30,7 +30,9 @@ namespace Apirest.Controllers
             {
                 mensaje = "Login exitoso",
                 id = user.id_usuario,
-                rol = user.Rol?.nombre_rol
+                rol = user.Rol?.nombre_rol,
+                nombre = user.nombre,
+                apellido = user.apellido
             });
         }
     }

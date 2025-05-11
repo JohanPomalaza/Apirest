@@ -8,8 +8,11 @@ namespace Apirest.Modelos
     {
         [Key]
         [Column("id_curso")]
-        public int id_curso { get; set; }
+        public int IdCurso { get; set; }
 
-        public string nombre_curso { get; set; }
+        [Required]
+        [MaxLength(100)]
+        [Column("nombre_curso")]
+        public string NombreCurso { get; set; }
     }
 }

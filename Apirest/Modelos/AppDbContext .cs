@@ -8,9 +8,17 @@ namespace Apirest.Modelos
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Rol> Roles { get; set; }
+        public DbSet<NivelEducativo> NivelesEducativos { get; set; }
+        public DbSet<Grado> Grados { get; set; }
+        public DbSet<EstudianteGrado> EstudianteGrado { get; set; }
+        public DbSet<CursosPorNivel> CursosPorNivel { get; set; }
         public DbSet<Cursos> Cursos { get; set; }
+        public DbSet<RamasCurso> RamasCurso { get; set; }
+        public DbSet<TemasCurso> TemasCurso { get; set; }
+        public DbSet<AnioEscolar> AnioEscolar { get; set; }
+        public DbSet<Notas> Notas { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -24,6 +32,11 @@ namespace Apirest.Modelos
             // También puedes mapear nombres de columnas si los nombres de propiedades no coinciden exactamente
             modelBuilder.Entity<Usuario>().ToTable("Usuarios");
             modelBuilder.Entity<Rol>().ToTable("Roles");
+            modelBuilder.Entity<CursosPorNivel>().HasKey(cp => new { cp.IdNivel, cp.IdCurso });
+            modelBuilder.Entity<Notas>()
+            .Property(n => n.Semestre)
+            .HasAnnotation("SqlCheckConstraint", "(Semestre IS NOT NULL AND Trimestre IS NULL) OR (Semestre IS NULL AND Trimestre IS NOT NULL)");
+
         }
     }
 }
