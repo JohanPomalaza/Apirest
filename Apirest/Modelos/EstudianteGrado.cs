@@ -11,8 +11,9 @@ namespace Apirest.Modelos
         public int IdEstudianteGrado { get; set; }
 
         [ForeignKey("Usuario")]
-        [Column("id_usuario")]
-        public int IdUsuario { get; set; }
+        [Column("id_usuario_estudiante")]
+        public int IdUsuarioEstudiante { get; set; }
+        public Usuario UsuarioEstudiante { get; set; }
         public Usuario Usuario { get; set; }
 
         [ForeignKey("Grado")]

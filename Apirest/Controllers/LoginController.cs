@@ -29,10 +29,10 @@ namespace Apirest.Controllers
             return Ok(new
             {
                 mensaje = "Login exitoso",
-                id = user.id_usuario,
+                id = user.IdUsuario,
                 rol = user.Rol?.nombre_rol,
-                nombre = user.nombre,
-                apellido = user.apellido
+                nombre = user.Nombre,
+                apellido = user.Apellido
             });
         }
     }

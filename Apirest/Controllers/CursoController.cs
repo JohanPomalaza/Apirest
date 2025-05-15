@@ -30,21 +30,57 @@ namespace Apirest.Controllers
             }
             return curso;
         }
+        [HttpGet("docente/{id_usuario}/cursos")]
+public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_usuario)
+{
+    var cursos = await _context.Usuarios
+        .Where(u => u.IdUsuario == id_usuario && u.IdRol == 1) // Verifica que el usuario sea docente
+        .Join(_context.AsignacionesDocente,
+            u => u.IdUsuario,
+            ad => ad.IdUsuarioDocente,
+            (u, ad) => ad)
+        .Join(_context.RamasCurso, 
+            ad => ad.IdRama, 
+            r => r.IdRama, 
+            (ad, r) => new { ad, r })
+        .Join(_context.Cursos, 
+            ar => ar.r.IdCurso, 
+            c => c.IdCurso, 
+            (ar, c) => c)
+        .Distinct()
+        .Select(c => new { c.IdCurso, c.NombreCurso })
+        .ToListAsync();
+
+    if (!cursos.Any())
+    {
+        return NotFound("No hay cursos asignados para este docente.");
+    }
+
+    return Ok(cursos);
+}
         [HttpGet("usuario/{id_usuario}/cursos")]
-        public async Task<ActionResult<IEnumerable<Cursos>>> GetCursosPorUsuario(int id_usuario)
+        public async Task<ActionResult<IEnumerable<object>>> GetCursosPorUsuario(int id_usuario)
         {
-            var cursos = await _context.Cursos
-                .Join(_context.CursosPorNivel,
-                    curso => curso.IdCurso,
-                    cursoNivel => cursoNivel.IdCurso,
-                    (curso, cursoNivel) => new { curso, cursoNivel })
-                .Join(_context.EstudianteGrado,
-                    cursoNivel => cursoNivel.cursoNivel.IdNivel,
-                    estudianteGrado => estudianteGrado.Grado.IdNivel,
-                    (cursoNivel, estudianteGrado) => new { cursoNivel.curso, estudianteGrado })
-                .Where(x => x.estudianteGrado.IdUsuario == id_usuario)
-                .Select(x => x.curso)
+            var cursos = await _context.EstudianteGrado
+                .Where(eg => eg.IdUsuarioEstudiante == id_usuario)
+                .Join(_context.Grados,
+                    eg => eg.IdGrado,
+                    g => g.IdGrado,
+                    (eg, g) => g)
+                .Join(_context.TemasCurso,
+                    g => g.IdGrado,
+                    t => t.IdGrado,
+                    (g, t) => t)
+                .Join(_context.RamasCurso,
+                    t => t.IdRama,
+                    r => r.IdRama,
+                    (t, r) => r)
+                .Join(_context.Cursos,
+                    r => r.IdCurso,
+                    c => c.IdCurso,
+                    (r, c) => c)
                 .Distinct()
+                .Select(c => new { c.IdCurso, c.NombreCurso })
                 .ToListAsync();
 
             if (!cursos.Any())
@@ -54,27 +90,27 @@ namespace Apirest.Controllers
 
             return Ok(cursos);
         }
+
         [HttpGet("usuario/{id_usuario}/curso/{id_curso}/notas")]
         public async Task<ActionResult<IEnumerable<object>>> GetNotasPorCurso(int id_usuario, int id_curso)
         {
             var notas = await _context.Notas
+                .Where(n => n.IdUsuarioEstudiante == id_usuario)
                 .Join(_context.TemasCurso,
-                    nota => nota.IdTema,
-                    tema => tema.IdTema,
-                    (nota, tema) => new { nota, tema })
+                    n => n.IdTema,
+                    t => t.IdTema,
+                    (n, t) => new { n, t })
                 .Join(_context.RamasCurso,
-                    nt => nt.tema.IdRama,
-                    rama => rama.IdRama,
-                    (nt, rama) => new { nt.nota, nt.tema, rama })
-                .Where(x => x.rama.IdCurso == id_curso && x.nota.IdUsuario == id_usuario)
+                    nt => nt.t.IdRama,
+                    r => r.IdRama,
+                    (nt, r) => new { nt.n, nt.t, r })
+                .Where(x => x.r.IdCurso == id_curso)
                 .Select(x => new
                 {
-                    x.nota.IdNota,
-                    x.nota.Nota,
-                    x.nota.Semestre,
-                    x.nota.Trimestre,
-                    Tema = x.tema.Nombre,
-                    Rama = x.rama.Nombre
+                    x.n.IdNota,
+                    x.n.Nota,
+                    x.t.Nombre,
+                    Rama = x.r.Nombre
                 })
                 .ToListAsync();
 
@@ -137,6 +173,80 @@ namespace Apirest.Controllers
         private bool CursoExists(int id)
         {
             return _context.Cursos.Any(e => e.IdCurso == id);
+        }
+
+        //APARTADO DEL PROFESOR PARA LISTAR DATOS Y EDICION DE NOTAS
+
+        [HttpGet("docente/{id_usuario}/curso/{id_curso}/estudiantes")]
+        public async Task<ActionResult<IEnumerable<object>>> GetEstudiantesPorCurso(int id_usuario, int id_curso)
+        {
+            var estudiantes = await _context.AsignacionesDocente
+                .Where(ad => ad.IdUsuarioDocente == id_usuario && ad.RamaCurso.IdCurso == id_curso)
+                .SelectMany(ad => _context.EstudianteGrado
+                    .Where(eg => eg.IdGrado == ad.IdGrado)
+                    .Select(eg => new { eg.IdUsuarioEstudiante, eg.Usuario.Nombre, eg.Usuario.Apellido }))
+                .ToListAsync();
+
+            return Ok(estudiantes);
+        }
+
+        [HttpGet("curso/{id_curso}/grado/{id_grado}/temas")]
+        public async Task<ActionResult<IEnumerable<object>>> GetTemasPorCurso(int id_curso, int id_grado)
+        {
+            var temas = await _context.RamasCurso
+                .Where(rc => rc.IdCurso == id_curso)
+                .SelectMany(rc => _context.TemasCurso
+                    .Where(t => t.IdRama == rc.IdRama && t.IdGrado == id_grado)
+                    .Select(t => new { t.IdTema, t.Nombre }))
+                .ToListAsync();
+
+            return Ok(temas);
+        }
+
+        [HttpGet("docente/{id_usuario}/curso/{id_curso}/notas")]
+        public async Task<ActionResult<IEnumerable<object>>> GetNotasPorCursoDocente(int id_usuario, int id_curso)
+        {
+            var notas = await _context.AsignacionesDocente
+        .Where(ad => ad.IdUsuarioDocente == id_usuario && ad.RamaCurso.IdCurso == id_curso)
+        .SelectMany(ad => _context.EstudianteGrado
+            .Where(eg => eg.IdGrado == ad.IdGrado)
+            .Select(eg => new {
+                eg.Usuario.Nombre,
+                eg.Usuario.Apellido,
+                Notas = _context.Notas
+                    .Where(n => n.IdUsuarioEstudiante == eg.IdUsuarioEstudiante)
+                    .Select(n => new { n.IdTema, n.Nota })
+                    .ToList()
+            }))
+        .ToListAsync();
+
+            return Ok(notas);
+        }
+
+        [HttpPost("notas")]
+        public async Task<IActionResult> AgregarOEditarNota(int id_usuario_estudiante, int id_tema, decimal nota)
+        {
+            var existingNota = await _context.Notas.FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
+
+            if (existingNota != null)
+            {
+                existingNota.Nota = nota;
+                _context.Notas.Update(existingNota);
+            }
+            else
+            {
+                var nuevaNota = new Notas
+                {
+                    IdUsuarioEstudiante = id_usuario_estudiante,
+                    IdTema = id_tema,
+                    Nota = nota
+                };
+                await _context.Notas.AddAsync(nuevaNota);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Nota guardada correctamente.");
         }
     }
 }

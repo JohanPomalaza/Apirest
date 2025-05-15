@@ -15,10 +15,15 @@ namespace Apirest.Modelos
         public int IdTema { get; set; }
         public TemasCurso TemaCurso { get; set; }
 
-        [ForeignKey("Usuario")]
-        [Column("id_usuario")]
-        public int IdUsuario { get; set; }
-        public Usuario Usuario { get; set; }
+        [ForeignKey("UsuarioEstudiante")]
+        [Column("id_usuario_estudiante")]
+        public int IdUsuarioEstudiante { get; set; }
+        public Usuario UsuarioEstudiante { get; set; }
+
+        [ForeignKey("UsuarioDocente")]
+        [Column("id_usuario_docente")]
+        public int? IdUsuarioDocente { get; set; }
+        public Usuario UsuarioDocente { get; set; }
 
         [Column("nota")]
         public decimal Nota { get; set; }
@@ -27,7 +32,5 @@ namespace Apirest.Modelos
         public int IdAnioEscolar { get; set; }
         public AnioEscolar AnioEscolar { get; set; }
 
-        public byte? Semestre { get; set; }
-        public byte? Trimestre { get; set; }
     }
 }

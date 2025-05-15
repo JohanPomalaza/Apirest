@@ -8,14 +8,26 @@ namespace Apirest.Modelos
     {
         [Key]
         [Column("id_usuario")]
-        public int id_usuario { get; set; }
+        public int IdUsuario { get; set; }
 
-        public string nombre { get; set; }
-        public string apellido { get; set; }
+        [Column("nombre")]
+        public string Nombre { get; set; }
+
+        [Column("apellido")]
+        public string Apellido { get; set; }
+
+        [Column("correo")]
         public string Correo { get; set; }
+
+        [Column("contrasena")]
         public string Contrasena { get; set; }
 
-        public int? id_rol { get; set; }
+        [ForeignKey("Rol")]
+        [Column("id_rol")]
+        public int IdRol { get; set; }
         public Rol Rol { get; set; }
+
+        [NotMapped]
+        public bool EsDocente => IdRol == 1;
     }
 }

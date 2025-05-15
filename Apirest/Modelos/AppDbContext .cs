@@ -19,6 +19,8 @@ namespace Apirest.Modelos
         public DbSet<Notas> Notas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
+        public DbSet<AsignacionesDocente> AsignacionesDocente { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -26,17 +28,24 @@ namespace Apirest.Modelos
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Rol)
                 .WithMany()
-                .HasForeignKey(u => u.id_rol)
+                .HasForeignKey(u => u.IdRol)
                 .HasConstraintName("FK__Usuarios__id_rol__3B75D760"); // opcional: por si SQL Server ya tiene ese nombre
 
             // También puedes mapear nombres de columnas si los nombres de propiedades no coinciden exactamente
             modelBuilder.Entity<Usuario>().ToTable("Usuarios");
             modelBuilder.Entity<Rol>().ToTable("Roles");
             modelBuilder.Entity<CursosPorNivel>().HasKey(cp => new { cp.IdNivel, cp.IdCurso });
-            modelBuilder.Entity<Notas>()
-            .Property(n => n.Semestre)
-            .HasAnnotation("SqlCheckConstraint", "(Semestre IS NOT NULL AND Trimestre IS NULL) OR (Semestre IS NULL AND Trimestre IS NOT NULL)");
+            modelBuilder.Entity<EstudianteGrado>()
+                .HasOne(e => e.AnioEscolar)
+                .WithMany()
+                .HasForeignKey(e => e.IdAnioEscolar)
+                .HasConstraintName("FK_EstudianteGrado_AnioEscolar");
 
+            modelBuilder.Entity<Notas>()
+                .HasOne(n => n.AnioEscolar)
+                .WithMany()
+                .HasForeignKey(n => n.IdAnioEscolar)
+                .HasConstraintName("FK_Notas_AnioEscolar");
         }
     }
 }
