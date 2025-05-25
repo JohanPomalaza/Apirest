@@ -10,6 +10,8 @@ namespace Apirest.Modelos
         [Column("id_nota")]
         public int IdNota { get; set; }
 
+        public string Comentario { get; set; }
+
         [ForeignKey("TemaCurso")]
         [Column("id_tema")]
         public int IdTema { get; set; }
@@ -26,7 +28,7 @@ namespace Apirest.Modelos
         public Usuario UsuarioDocente { get; set; }
 
         [Column("nota")]
-        public decimal Nota { get; set; }
+        public string Nota { get; set; }
 
         [Column("id_anio_escolar")]
         public int IdAnioEscolar { get; set; }

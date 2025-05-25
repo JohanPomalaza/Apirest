@@ -29,5 +29,7 @@ namespace Apirest.Modelos
 
         [NotMapped]
         public bool EsDocente => IdRol == 1;
+
+        public ICollection<EstudianteGrado> EstudiantesGrado { get; set; }
     }
 }

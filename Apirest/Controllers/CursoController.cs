@@ -91,6 +91,110 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
             return Ok(cursos);
         }
 
+        //SE LISTA SECCIONES SEGUN DOCENTE
+
+        [HttpGet("docente/{id_docente}/secciones")]
+        public async Task<ActionResult<IEnumerable<object>>> GetSeccionesAsignadas(int id_docente)
+        {
+            // Obtener el año escolar activo
+            var anioActivo = await _context.AnioEscolar
+                .FirstOrDefaultAsync(a => a.Activo == true);
+
+            if (anioActivo == null)
+                return NotFound("No hay un año escolar activo.");
+
+            // Obtener secciones solo para el año escolar activo
+            var secciones = await _context.AsignacionesDocente
+                .Where(a => a.IdUsuarioDocente == id_docente && a.IdAnioEscolar == anioActivo.IdAnioEscolar)
+                .Select(a => new
+                {
+                    a.IdAsignacion,
+                    a.IdGrado,
+                    Grado = a.Grado.NombreGrado,
+                    a.IdRama,
+                    Rama = a.RamaCurso.Nombre,
+                    Curso = a.RamaCurso.Curso.NombreCurso,
+                    a.IdAnioEscolar
+                })
+                .ToListAsync();
+
+            if (!secciones.Any())
+                return NotFound("No hay secciones asignadas a este docente para el año escolar activo.");
+
+            return Ok(secciones);
+        }
+        /*-----------------------------------------------------------*/
+
+
+        //SE LISTA ALUMNOS POR SECCION
+        [HttpGet("grado/{id_grado}/anio/{id_anio}/alumnos")]
+        public async Task<ActionResult<IEnumerable<object>>> GetAlumnosPorGrado(int id_grado, int id_anio)
+        {
+            var alumnos = await _context.EstudianteGrado
+                .Where(e => e.IdGrado == id_grado && e.IdAnioEscolar == id_anio)
+                .Include(e => e.UsuarioEstudiante)
+                .Select(e => new
+                {
+                    e.IdUsuarioEstudiante,
+                    NombreCompleto = e.UsuarioEstudiante.Nombre + " " + e.UsuarioEstudiante.Apellido
+                })
+                .ToListAsync();
+
+            if (!alumnos.Any())
+                return NotFound("No hay estudiantes en esta sección.");
+
+            return Ok(alumnos);
+        }
+        /*-----------------------------------------------------------*/
+
+        //SE LISTA CURSOS POR ALUMNO
+        [HttpGet("alumno/{id_usuario}/cursos")]
+        public async Task<ActionResult<IEnumerable<object>>> GetCursosDelAlumno(int id_usuario)
+        {
+            var estudianteGrado = await _context.EstudianteGrado
+                .Where(e => e.IdUsuarioEstudiante == id_usuario)
+                .OrderByDescending(e => e.IdAnioEscolar)
+                .FirstOrDefaultAsync();
+
+            if (estudianteGrado == null)
+                return NotFound("No se encontró la información del estudiante.");
+
+            var cursos = await _context.TemasCurso
+                .Where(t => t.IdGrado == estudianteGrado.IdGrado)
+                .Select(t => new
+                {
+                    t.IdRama,
+                    Rama = t.RamaCurso.Nombre,
+                    Curso = t.RamaCurso.Curso.NombreCurso
+                })
+                .Distinct()
+                .ToListAsync();
+
+            return Ok(cursos);
+        }
+        /*-----------------------------------------------------------*/
+
+        //SE LISTA NOTAS POR CURSO
+        [HttpGet("alumno/{id_usuario}/curso/{id_rama}/anio/{id_anio}/notas")]
+        public async Task<ActionResult<IEnumerable<object>>> GetNotasPorCurso(int id_usuario, int id_rama, int id_anio)
+        {
+            var notas = await _context.Notas
+                .Where(n => n.IdUsuarioEstudiante == id_usuario && n.IdAnioEscolar == id_anio && n.TemaCurso.IdRama == id_rama)
+                .Select(n => new
+                {
+                    IdTema = n.IdTema,
+                    Tema = n.TemaCurso.Nombre,
+                    Nota = n.Nota,
+                    Comentario = n.Comentario
+                })
+                .ToListAsync();
+
+            return Ok(notas);
+        }
+
+        /*-----------------------------------------------------------*/
+
+
         [HttpGet("usuario/{id_usuario}/curso/{id_curso}/notas")]
         public async Task<ActionResult<IEnumerable<object>>> GetNotasPorCurso(int id_usuario, int id_curso)
         {
@@ -180,11 +284,27 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
         [HttpGet("docente/{id_usuario}/curso/{id_curso}/estudiantes")]
         public async Task<ActionResult<IEnumerable<object>>> GetEstudiantesPorCurso(int id_usuario, int id_curso)
         {
-            var estudiantes = await _context.AsignacionesDocente
+            // Obtener las asignaciones del docente al curso
+            var asignaciones = await _context.AsignacionesDocente
                 .Where(ad => ad.IdUsuarioDocente == id_usuario && ad.RamaCurso.IdCurso == id_curso)
-                .SelectMany(ad => _context.EstudianteGrado
-                    .Where(eg => eg.IdGrado == ad.IdGrado)
-                    .Select(eg => new { eg.IdUsuarioEstudiante, eg.Usuario.Nombre, eg.Usuario.Apellido }))
+                .ToListAsync();
+
+            if (!asignaciones.Any())
+                return NotFound("No se encontraron asignaciones para este docente y curso.");
+
+            // Obtener todos los grados asignados al docente
+            var gradosAsignados = asignaciones.Select(a => a.IdGrado).Distinct().ToList();
+
+            // Obtener estudiantes de esos grados
+            var estudiantes = await _context.EstudianteGrado
+                .Where(eg => gradosAsignados.Contains(eg.IdGrado))
+                .Include(eg => eg.UsuarioEstudiante) // 👈 Cargar datos del usuario
+                .Select(eg => new
+                {
+                    eg.IdUsuarioEstudiante,
+                    Nombre = eg.UsuarioEstudiante.Nombre,
+                    Apellido = eg.UsuarioEstudiante.Apellido
+                })
                 .ToListAsync();
 
             return Ok(estudiantes);
@@ -206,31 +326,49 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
         [HttpGet("docente/{id_usuario}/curso/{id_curso}/notas")]
         public async Task<ActionResult<IEnumerable<object>>> GetNotasPorCursoDocente(int id_usuario, int id_curso)
         {
-            var notas = await _context.AsignacionesDocente
-        .Where(ad => ad.IdUsuarioDocente == id_usuario && ad.RamaCurso.IdCurso == id_curso)
-        .SelectMany(ad => _context.EstudianteGrado
-            .Where(eg => eg.IdGrado == ad.IdGrado)
-            .Select(eg => new {
-                eg.Usuario.Nombre,
-                eg.Usuario.Apellido,
-                Notas = _context.Notas
-                    .Where(n => n.IdUsuarioEstudiante == eg.IdUsuarioEstudiante)
-                    .Select(n => new { n.IdTema, n.Nota })
-                    .ToList()
-            }))
-        .ToListAsync();
+            var asignaciones = await _context.AsignacionesDocente
+                .Where(ad => ad.IdUsuarioDocente == id_usuario && ad.RamaCurso.IdCurso == id_curso)
+                .ToListAsync();
 
-            return Ok(notas);
+            if (!asignaciones.Any())
+                return NotFound("No hay asignaciones para este docente y curso.");
+
+            var idRamas = asignaciones.Select(a => a.IdRama).Distinct().ToList();
+            var idGrados = asignaciones.Select(a => a.IdGrado).Distinct().ToList();
+
+            var estudiantes = await _context.EstudianteGrado
+                .Where(eg => idGrados.Contains(eg.IdGrado))
+                .Include(eg => eg.UsuarioEstudiante)
+                .ToListAsync();
+
+            var resultado = estudiantes.Select(est => new
+            {
+                est.UsuarioEstudiante.Nombre,
+                est.UsuarioEstudiante.Apellido,
+                Notas = _context.Notas
+                    .Where(n => n.IdUsuarioEstudiante == est.IdUsuarioEstudiante && idRamas.Contains(n.TemaCurso.IdRama))
+                    .Include(n => n.TemaCurso)
+                    .Select(n => new
+                    {
+                        Tema = n.TemaCurso.Nombre,
+                        n.Nota
+                    })
+                    .ToList()
+            }).ToList();
+
+            return Ok(resultado);
         }
 
-        [HttpPost("notas")]
-        public async Task<IActionResult> AgregarOEditarNota(int id_usuario_estudiante, int id_tema, decimal nota)
+        [HttpPost("notas/comentario")]
+        public async Task<IActionResult> AgregarOEditarNotaConComentario(int id_usuario_estudiante, int id_tema, string nota, string comentario)
         {
-            var existingNota = await _context.Notas.FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
+            var existingNota = await _context.Notas
+                .FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
 
             if (existingNota != null)
             {
                 existingNota.Nota = nota;
+                existingNota.Comentario = comentario;
                 _context.Notas.Update(existingNota);
             }
             else
@@ -239,14 +377,16 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
                 {
                     IdUsuarioEstudiante = id_usuario_estudiante,
                     IdTema = id_tema,
-                    Nota = nota
+                    Nota = nota,
+                    Comentario = comentario
                 };
                 await _context.Notas.AddAsync(nuevaNota);
             }
 
             await _context.SaveChangesAsync();
 
-            return Ok("Nota guardada correctamente.");
+            return Ok(new { message = "Nota guardada correctamente." });
         }
+
     }
 }

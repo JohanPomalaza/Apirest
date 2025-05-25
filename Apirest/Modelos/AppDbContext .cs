@@ -46,6 +46,14 @@ namespace Apirest.Modelos
                 .WithMany()
                 .HasForeignKey(n => n.IdAnioEscolar)
                 .HasConstraintName("FK_Notas_AnioEscolar");
+            modelBuilder.Entity<AsignacionesDocente>()
+            .HasOne(a => a.Grado)
+            .WithMany()
+            .HasForeignKey(a => a.IdGrado);
+
+            modelBuilder.Entity<Grado>()
+                .Property(g => g.NombreGrado)
+                .HasColumnName("nombre_grado");
         }
     }
 }
