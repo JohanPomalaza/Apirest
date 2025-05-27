@@ -165,7 +165,8 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
                 {
                     t.IdRama,
                     Rama = t.RamaCurso.Nombre,
-                    Curso = t.RamaCurso.Curso.NombreCurso
+                    Curso = t.RamaCurso.Curso.NombreCurso,
+                    IdCurso = t.RamaCurso.IdCurso
                 })
                 .Distinct()
                 .ToListAsync();
@@ -214,6 +215,7 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
                     x.n.IdNota,
                     x.n.Nota,
                     x.t.Nombre,
+                   
                     Rama = x.r.Nombre
                 })
                 .ToListAsync();
