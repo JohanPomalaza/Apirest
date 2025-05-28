@@ -210,12 +210,12 @@ public async Task<ActionResult<IEnumerable<object>>> GetCursosPorDocente(int id_
                     r => r.IdRama,
                     (nt, r) => new { nt.n, nt.t, r })
                 .Where(x => x.r.IdCurso == id_curso)
-                .Select(x => new
+                .Select(x => new 
                 {
                     x.n.IdNota,
                     x.n.Nota,
                     x.t.Nombre,
-                   
+                    Comentario = x.n.Comentario,
                     Rama = x.r.Nombre
                 })
                 .ToListAsync();
