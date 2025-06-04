@@ -21,6 +21,8 @@ namespace Apirest.Modelos
 
         public DbSet<AsignacionesDocente> AsignacionesDocente { get; set; }
 
+        public DbSet<EstudianteGrado>EstudianteGrados { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -54,6 +56,18 @@ namespace Apirest.Modelos
             modelBuilder.Entity<Grado>()
                 .Property(g => g.NombreGrado)
                 .HasColumnName("nombre_grado");
+
+            modelBuilder.Entity<AsignacionesDocente>()
+                .HasOne(a => a.UsuarioDocente)
+                .WithMany(u => u.AsignacionesComoDocente)
+                .HasForeignKey(a => a.IdUsuarioDocente)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AsignacionesDocente>()
+                .HasOne(a => a.Asignador)
+                .WithMany(u => u.AsignacionesComoAsignador)
+                .HasForeignKey(a => a.IdAsignador)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

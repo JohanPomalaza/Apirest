@@ -31,5 +31,8 @@ namespace Apirest.Modelos
         public bool EsDocente => IdRol == 1;
 
         public ICollection<EstudianteGrado> EstudiantesGrado { get; set; }
+
+        public virtual ICollection<AsignacionesDocente> AsignacionesComoDocente { get; set; }
+        public virtual ICollection<AsignacionesDocente> AsignacionesComoAsignador { get; set; }
     }
 }

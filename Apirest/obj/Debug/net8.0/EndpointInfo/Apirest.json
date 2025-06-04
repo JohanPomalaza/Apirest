@@ -67,24 +67,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Cursos"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Cursos"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Cursos"
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -186,49 +169,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Curso/docente/{id_usuario}/cursos": {
-      "get": {
-        "tags": [
-          "Curso"
-        ],
-        "parameters": [
-          {
-            "name": "id_usuario",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              }
-            }
           }
         }
       }
@@ -527,162 +467,6 @@
         }
       }
     },
-    "/api/Curso/docente/{id_usuario}/curso/{id_curso}/estudiantes": {
-      "get": {
-        "tags": [
-          "Curso"
-        ],
-        "parameters": [
-          {
-            "name": "id_usuario",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id_curso",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Curso/curso/{id_curso}/grado/{id_grado}/temas": {
-      "get": {
-        "tags": [
-          "Curso"
-        ],
-        "parameters": [
-          {
-            "name": "id_curso",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id_grado",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Curso/docente/{id_usuario}/curso/{id_curso}/notas": {
-      "get": {
-        "tags": [
-          "Curso"
-        ],
-        "parameters": [
-          {
-            "name": "id_usuario",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "id_curso",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Curso/notas/comentario": {
       "post": {
         "tags": [
@@ -727,6 +511,308 @@
         }
       }
     },
+    "/api/Docentes": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Docentes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{id}": {
+      "put": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{idDocente}/asignar": {
+      "post": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idDocente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionesDocente"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionesDocente"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionesDocente"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes": {
+      "get": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuario"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes/{id}": {
+      "put": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes/{idEstudiante}/asignar": {
+      "post": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "parameters": [
+          {
+            "name": "idEstudiante",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstudianteGrado"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstudianteGrado"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstudianteGrado"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Login/login": {
       "post": {
         "tags": [
@@ -751,6 +837,315 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RamasCurso": {
+      "get": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RamasCurso/porCurso/{idCurso}": {
+      "get": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idCurso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RamasCurso/{id}": {
+      "put": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RamasCurso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/porRama/{idRama}": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idRama",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/porGrado/{idGrado}": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idGrado",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/porRamaYGrado/{idRama}/{idGrado}": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idRama",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idGrado",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/{id}": {
+      "put": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemasCurso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -800,6 +1195,68 @@
   },
   "components": {
     "schemas": {
+      "AnioEscolar": {
+        "type": "object",
+        "properties": {
+          "idAnioEscolar": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "anio": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AsignacionesDocente": {
+        "type": "object",
+        "properties": {
+          "idAsignacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioDocente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAsignador": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAnioEscolar": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usuarioDocente": {
+            "$ref": "#/components/schemas/Usuario"
+          },
+          "asignador": {
+            "$ref": "#/components/schemas/Usuario"
+          },
+          "ramaCurso": {
+            "$ref": "#/components/schemas/RamasCurso"
+          },
+          "grado": {
+            "$ref": "#/components/schemas/Grado"
+          },
+          "anioEscolar": {
+            "$ref": "#/components/schemas/AnioEscolar"
+          }
+        },
+        "additionalProperties": false
+      },
       "Cursos": {
         "required": [
           "nombreCurso"
@@ -818,6 +1275,69 @@
         },
         "additionalProperties": false
       },
+      "EstudianteGrado": {
+        "type": "object",
+        "properties": {
+          "idEstudianteGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioEstudiante": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAnioEscolar": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usuarioEstudiante": {
+            "$ref": "#/components/schemas/Usuario"
+          },
+          "grado": {
+            "$ref": "#/components/schemas/Grado"
+          },
+          "anioEscolar": {
+            "$ref": "#/components/schemas/AnioEscolar"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Grado": {
+        "required": [
+          "nombreGrado"
+        ],
+        "type": "object",
+        "properties": {
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreGrado": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "idNivel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nivel": {
+            "$ref": "#/components/schemas/NivelEducativo"
+          },
+          "estudiantes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EstudianteGrado"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -827,6 +1347,152 @@
           },
           "contrasena": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NivelEducativo": {
+        "required": [
+          "nombreNivel"
+        ],
+        "type": "object",
+        "properties": {
+          "idNivel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreNivel": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "grados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Grado"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RamasCurso": {
+        "type": "object",
+        "properties": {
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "curso": {
+            "$ref": "#/components/schemas/Cursos"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Rol": {
+        "type": "object",
+        "properties": {
+          "id_rol": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre_rol": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TemasCurso": {
+        "type": "object",
+        "properties": {
+          "idTema": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ramaCurso": {
+            "$ref": "#/components/schemas/RamasCurso"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "grado": {
+            "$ref": "#/components/schemas/Grado"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido": {
+            "type": "string",
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contrasena": {
+            "type": "string",
+            "nullable": true
+          },
+          "idRol": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rol": {
+            "$ref": "#/components/schemas/Rol"
+          },
+          "esDocente": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "estudiantesGrado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EstudianteGrado"
+            },
+            "nullable": true
+          },
+          "asignacionesComoDocente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AsignacionesDocente"
+            },
+            "nullable": true
+          },
+          "asignacionesComoAsignador": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AsignacionesDocente"
+            },
             "nullable": true
           }
         },

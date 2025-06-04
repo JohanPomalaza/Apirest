@@ -14,11 +14,18 @@ namespace Apirest.Modelos
         [Column("id_rama")]
         public int IdRama { get; set; }
 
-        [ForeignKey("Grados")]
         [Column("id_grado")]
         public int IdGrado { get; set; }
+
+        /*[ForeignKey("Grados")]
+        [Column("id_grado")]
+        public int IdGrado { get; set; }*/
+
         public RamasCurso RamaCurso { get; set; }
 
         public string Nombre { get; set; }
+
+        [ForeignKey("IdGrado")]
+        public virtual Grado Grado { get; set; }
     }
 }
