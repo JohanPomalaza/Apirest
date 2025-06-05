@@ -584,7 +584,7 @@
   },
   {
     "ContainingType": "Apirest.Controllers.TemasCursoController",
-    "Method": "EditarTema",
+    "Method": "EditarTemaSimple",
     "RelativePath": "api/TemasCurso/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -596,8 +596,8 @@
         "IsRequired": true
       },
       {
-        "Name": "tema",
-        "Type": "Apirest.Modelos.TemasCurso",
+        "Name": "temaDto",
+        "Type": "Apirest.Modelos.TemaEditarDTO",
         "IsRequired": true
       }
     ],

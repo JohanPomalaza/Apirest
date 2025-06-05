@@ -66,16 +66,31 @@ namespace Apirest.Controllers
             return Ok(tema);
         }
 
-        // PUT: api/TemasCurso/5
+
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarTema(int id, [FromBody] TemasCurso tema)
+        public async Task<IActionResult> EditarTemaSimple(int id, [FromBody] TemaEditarDTO temaDto)
         {
-            if (id != tema.IdTema)
+            if (id != temaDto.IdTema)
                 return BadRequest("El ID no coincide");
 
-            _context.Entry(tema).State = EntityState.Modified;
+            var temaExistente = await _context.TemasCurso.FindAsync(id);
+            if (temaExistente == null)
+                return NotFound("Tema no encontrado");
+
+            // Actualizar nombre
+            temaExistente.Nombre = temaDto.Nombre;
+
+            // Verificar si la rama existe antes de asignar
+            var nuevaRama = await _context.RamasCurso.FindAsync(temaDto.IdRama);
+            if (nuevaRama == null)
+                return NotFound("Rama no encontrada");
+
+            // Actualizar la relación con la nueva rama
+            temaExistente.IdRama = temaDto.IdRama;
+
             await _context.SaveChangesAsync();
-            return Ok(tema);
+            return Ok(new { mensaje = "Tema actualizado correctamente" });
         }
 
         // DELETE: api/TemasCurso/5

@@ -1110,17 +1110,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
+                "$ref": "#/components/schemas/TemaEditarDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
+                "$ref": "#/components/schemas/TemaEditarDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
+                "$ref": "#/components/schemas/TemaEditarDTO"
               }
             }
           }
@@ -1408,6 +1408,24 @@
           "nombre_rol": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TemaEditarDTO": {
+        "type": "object",
+        "properties": {
+          "idTema": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
