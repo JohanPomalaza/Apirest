@@ -181,6 +181,7 @@ namespace Apirest.Controllers
                 .Where(n => n.IdUsuarioEstudiante == id_usuario && n.IdAnioEscolar == id_anio && n.TemaCurso.IdRama == id_rama)
                 .Select(n => new
                 {
+                    IdNota = n.IdNota,
                     IdTema = n.IdTema,
                     Tema = n.TemaCurso.Nombre,
                     Nota = n.Nota,
@@ -227,16 +228,28 @@ namespace Apirest.Controllers
         }
 
         [HttpPost("notas/comentario")]
-        public async Task<IActionResult> AgregarOEditarNotaConComentario(int id_usuario_estudiante, int id_tema, string nota, string comentario)
+        public async Task<IActionResult> AgregarOEditarNotaConComentario(
+    int id_usuario_estudiante, int id_tema, string nota, string comentario, int id_usuario_docente)
         {
             var existingNota = await _context.Notas
                 .FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
 
+            string accion;
+            string notaAnterior = null;
+            string comentarioAnterior = null;
+
             if (existingNota != null)
             {
+                // Guardar valores antiguos para historial
+                notaAnterior = existingNota.Nota;
+                comentarioAnterior = existingNota.Comentario;
+
+                // Actualizar nota
                 existingNota.Nota = nota;
                 existingNota.Comentario = comentario;
                 _context.Notas.Update(existingNota);
+
+                accion = "ACTUALIZAR";
             }
             else
             {
@@ -248,12 +261,63 @@ namespace Apirest.Controllers
                     Comentario = comentario
                 };
                 await _context.Notas.AddAsync(nuevaNota);
+                await _context.SaveChangesAsync(); // Guardamos aquí para obtener id_nota
+
+                existingNota = nuevaNota;
+                accion = "CREAR";
             }
 
+            // Agregar al historial
+            var historial = new HistorialNotas
+            {
+                IdNota = existingNota.IdNota,
+                IdTema = existingNota.IdTema,
+                IdUsuarioEstudiante = id_usuario_estudiante,
+                IdUsuarioDocente = id_usuario_docente,
+                NotaAnterior = notaAnterior,
+                NotaNueva = nota,
+                ComentarioAnterior = comentarioAnterior,
+                ComentarioNuevo = comentario,
+                Accion = accion,
+                FechaCambio = DateTime.Now
+            };
+
+            await _context.HistorialNotas.AddAsync(historial);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Nota guardada correctamente." });
+            return Ok(new { message = "Nota guardada y registrada en historial correctamente." });
         }
 
+        [HttpGet("notas/historial")]
+        public async Task<IActionResult> ObtenerHistorialPorIdNota(int idNota)
+        {
+            var historial = await _context.HistorialNotas
+                .Where(h => h.IdNota == idNota)
+                .OrderByDescending(h => h.FechaCambio)
+                .Select(h => new
+                {
+                    h.IdHistorial,
+                    h.IdNota,
+                    h.IdTema,
+                    h.IdUsuarioEstudiante,
+                    h.IdUsuarioDocente,
+                    NombreDocente = _context.Usuarios
+                        .Where(u => u.IdUsuario == h.IdUsuarioDocente)
+                        .Select(u => u.Nombre)
+                        .FirstOrDefault(),
+                    h.NotaAnterior,
+                    h.NotaNueva,
+                    h.ComentarioAnterior,
+                    h.ComentarioNuevo,
+                    h.Accion,
+                    FechaCambio = h.FechaCambio.ToString("yyyy-MM-dd HH:mm:ss")
+                })
+                .ToListAsync();
+
+            if (historial.Count == 0)
+                return NotFound(new { message = "No hay historial para la nota indicada." });
+
+            return Ok(historial);
+        }
     }
 }

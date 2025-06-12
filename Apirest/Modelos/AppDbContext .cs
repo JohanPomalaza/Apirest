@@ -23,6 +23,8 @@ namespace Apirest.Modelos
 
         public DbSet<EstudianteGrado>EstudianteGrados { get; set; }
 
+        public DbSet<HistorialNotas> HistorialNotas { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

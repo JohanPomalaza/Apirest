@@ -244,6 +244,27 @@
         "Name": "comentario",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "id_usuario_docente",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "ObtenerHistorialPorIdNota",
+    "RelativePath": "api/Curso/notas/historial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idNota",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
