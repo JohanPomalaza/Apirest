@@ -16,5 +16,7 @@ namespace Apirest.Modelos
         public Cursos Curso { get; set; }
 
         public string Nombre { get; set; }
+
+        public bool Estado { get; set; }
     }
 }

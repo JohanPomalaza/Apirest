@@ -16,14 +16,26 @@ namespace Apirest.Controllers
             _context = context;
         }
         [HttpGet]
-    public async Task<ActionResult<IEnumerable<Usuario>>> GetDocentes()
-    {
-        return await _context.Usuarios
-            .Where(u => u.IdRol == 1) // Suponiendo que 1 es el rol docente
-            .Include(u => u.AsignacionesComoDocente)
-            .ThenInclude(a => a.RamaCurso)
-            .ToListAsync();
-    }
+        public async Task<ActionResult<IEnumerable<DocenteDto>>> GetDocentes()
+        {
+            var docentes = await _context.Usuarios
+                .Where(u => u.IdRol == 1)
+                .Select(u => new DocenteDto
+                {
+                    IdUsuario = u.IdUsuario,
+                    Nombre = u.Nombre,
+                    Correo = u.Correo,
+                    Asignaciones = u.AsignacionesComoDocente.Select(a => new AsignacionDto
+                    {
+                        IdAsignacion = a.IdAsignacion,
+                        IdRamaCurso = a.IdRama,
+                        RamaCursoNombre = a.RamaCurso.Nombre
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return docentes;
+        }
 
     [HttpPost]
     public async Task<ActionResult> CrearDocente(Usuario docente)

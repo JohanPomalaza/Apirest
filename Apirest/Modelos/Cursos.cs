@@ -14,5 +14,7 @@ namespace Apirest.Modelos
         [MaxLength(100)]
         [Column("nombre_curso")]
         public string NombreCurso { get; set; }
+        [Column("estado")]
+        public bool Estado {  get; set; }
     }
 }

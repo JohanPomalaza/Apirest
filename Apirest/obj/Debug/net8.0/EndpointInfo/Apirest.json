@@ -46,6 +46,16 @@
         "tags": [
           "Curso"
         ],
+        "parameters": [
+          {
+            "name": "id_usuario_admin",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -130,17 +140,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cursos"
+                "$ref": "#/components/schemas/CursoUpdateDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cursos"
+                "$ref": "#/components/schemas/CursoUpdateDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Cursos"
+                "$ref": "#/components/schemas/CursoUpdateDTO"
               }
             }
           }
@@ -152,6 +162,37 @@
         }
       },
       "delete": {
+        "tags": [
+          "Curso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id_usuario_admin",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Curso/Historial/{id}": {
+      "get": {
         "tags": [
           "Curso"
         ],
@@ -554,7 +595,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Usuario"
+                    "$ref": "#/components/schemas/DocenteDto"
                   }
                 }
               },
@@ -562,7 +603,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Usuario"
+                    "$ref": "#/components/schemas/DocenteDto"
                   }
                 }
               },
@@ -570,7 +611,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Usuario"
+                    "$ref": "#/components/schemas/DocenteDto"
                   }
                 }
               }
@@ -893,17 +934,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaCursoCrearDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaCursoCrearDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaCursoCrearDTO"
               }
             }
           }
@@ -938,7 +979,7 @@
         }
       }
     },
-    "/api/RamasCurso/{id}": {
+    "/api/RamasCurso/{id}/{idUsuario}": {
       "put": {
         "tags": [
           "RamasCurso"
@@ -952,23 +993,32 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaEditarDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaEditarDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RamasCurso"
+                "$ref": "#/components/schemas/RamaEditarDto"
               }
             }
           }
@@ -992,6 +1042,38 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RamasCurso/historial/{idRama}": {
+      "get": {
+        "tags": [
+          "RamasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idRama",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
@@ -1006,35 +1088,6 @@
         "tags": [
           "TemasCurso"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "TemasCurso"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemasCurso"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1120,7 +1173,49 @@
         }
       }
     },
-    "/api/TemasCurso/{id}": {
+    "/api/TemasCurso/{idUsuario}": {
+      "post": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemaCrearDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemaCrearDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemaCrearDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/{id}/{idUsuario}": {
       "put": {
         "tags": [
           "TemasCurso"
@@ -1128,6 +1223,15 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
             "in": "path",
             "required": true,
             "schema": {
@@ -1168,6 +1272,38 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TemasCurso/historial/{idTema}": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idTema",
             "in": "path",
             "required": true,
             "schema": {
@@ -1242,6 +1378,24 @@
         },
         "additionalProperties": false
       },
+      "AsignacionDto": {
+        "type": "object",
+        "properties": {
+          "idAsignacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idRamaCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ramaCursoNombre": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AsignacionesDocente": {
         "type": "object",
         "properties": {
@@ -1287,6 +1441,20 @@
         },
         "additionalProperties": false
       },
+      "CursoUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCurso": {
+            "type": "string",
+            "nullable": true
+          },
+          "usuarioResponsable": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Cursos": {
         "required": [
           "nombreCurso"
@@ -1301,6 +1469,34 @@
             "maxLength": 100,
             "minLength": 1,
             "type": "string"
+          },
+          "estado": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocenteDto": {
+        "type": "object",
+        "properties": {
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "nullable": true
+          },
+          "asignaciones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AsignacionDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1407,6 +1603,38 @@
         },
         "additionalProperties": false
       },
+      "RamaCursoCrearDTO": {
+        "type": "object",
+        "properties": {
+          "idCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RamaEditarDto": {
+        "type": "object",
+        "properties": {
+          "idCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RamasCurso": {
         "type": "object",
         "properties": {
@@ -1424,6 +1652,9 @@
           "nombre": {
             "type": "string",
             "nullable": true
+          },
+          "estado": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1442,6 +1673,24 @@
         },
         "additionalProperties": false
       },
+      "TemaCrearDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "TemaEditarDTO": {
         "type": "object",
         "properties": {
@@ -1456,34 +1705,6 @@
           "idRama": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TemasCurso": {
-        "type": "object",
-        "properties": {
-          "idTema": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idRama": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idGrado": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "ramaCurso": {
-            "$ref": "#/components/schemas/RamasCurso"
-          },
-          "nombre": {
-            "type": "string",
-            "nullable": true
-          },
-          "grado": {
-            "$ref": "#/components/schemas/Grado"
           }
         },
         "additionalProperties": false

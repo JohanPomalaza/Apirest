@@ -18,42 +18,139 @@ namespace Apirest.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cursos>>> GetCursos()
         {
-            return await _context.Cursos.ToListAsync();
+            return await _context.Cursos
+                                 .Where(c => c.Estado == true)
+                                 .ToListAsync();
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cursos>>GetCurso(int id)
+        public async Task<ActionResult<Cursos>> GetCurso(int id)
         {
-            var curso = await _context.Cursos.FindAsync(id);
+            var curso = await _context.Cursos
+                                      .Where(c => c.IdCurso == id && c.Estado == true)
+                                      .FirstOrDefaultAsync();
 
-            if(curso == null) {
+            if (curso == null)
+            {
                 return NotFound();
             }
+
             return curso;
         }
         [HttpPost]
-        public async Task<IActionResult> CrearCurso([FromBody] Cursos curso)
+        public async Task<IActionResult> CrearCurso([FromBody] Cursos curso, [FromQuery] int id_usuario_admin)
         {
+            curso.Estado = true;  // Se crea como activo por defecto
             _context.Cursos.Add(curso);
             await _context.SaveChangesAsync();
+
+            // Guardar en historial
+            var historial = new HistorialCursos
+            {
+                IdCurso = curso.IdCurso,
+                NombreAnterior = null,
+                NombreNuevo = curso.NombreCurso,
+                Accion = "CREAR",
+                FechaCambio = DateTime.Now,
+                UsuarioResponsable = id_usuario_admin
+            };
+            _context.HistorialCursos.Add(historial);
+            await _context.SaveChangesAsync();
+
             return Ok(curso);
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditarCurso(int id, [FromBody] Cursos curso)
+        public async Task<IActionResult> EditarCurso(int id, [FromBody] CursoUpdateDTO cursoDto)
         {
-            if (id != curso.IdCurso) return BadRequest();
-            _context.Entry(curso).State = EntityState.Modified;
+            var curso = await _context.Cursos.FindAsync(id);
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            string nombreAnterior = curso.NombreCurso;
+
+            // Actualizamos solo el nombre
+            curso.NombreCurso = cursoDto.NombreCurso;
+            _context.Entry(curso).Property(c => c.NombreCurso).IsModified = true;
+
             await _context.SaveChangesAsync();
+
+            // Guardar en historial
+            var historial = new HistorialCursos
+            {
+                IdCurso = curso.IdCurso,
+                NombreAnterior = nombreAnterior,
+                NombreNuevo = curso.NombreCurso,
+                Accion = "EDITAR",
+                FechaCambio = DateTime.Now,
+                UsuarioResponsable = cursoDto.UsuarioResponsable
+            };
+            _context.HistorialCursos.Add(historial);
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarCurso(int id)
+        public async Task<IActionResult> EliminarCurso(int id, [FromQuery] int id_usuario_admin)
         {
             var curso = await _context.Cursos.FindAsync(id);
-            if (curso == null) return NotFound();
-            _context.Cursos.Remove(curso);
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            string nombreAnterior = curso.NombreCurso;
+
+            curso.Estado = false;  // Marcamos como inactivo
+            _context.Entry(curso).Property(c => c.Estado).IsModified = true;
             await _context.SaveChangesAsync();
+
+            // Guardar en historial
+            var historial = new HistorialCursos
+            {
+                IdCurso = curso.IdCurso,
+                NombreAnterior = nombreAnterior,
+                NombreNuevo = curso.NombreCurso, // sigue siendo el mismo nombre
+                Accion = "ELIMINAR",
+                FechaCambio = DateTime.Now,
+                UsuarioResponsable = id_usuario_admin
+            };
+            _context.HistorialCursos.Add(historial);
+            await _context.SaveChangesAsync();
+
             return Ok();
+        }
+
+        [HttpGet("Historial/{id}")]
+        public async Task<IActionResult> GetHistorialCurso(int id)
+        {
+            var historial = await _context.HistorialCursos
+                .Where(h => h.IdCurso == id)
+                .OrderByDescending(h => h.FechaCambio)
+                .Select(h => new
+                {
+                    h.IdHistorial,
+                    h.IdCurso,
+                    h.NombreAnterior,
+                    h.NombreNuevo,
+                    h.Accion,
+                    h.FechaCambio,
+                    h.UsuarioResponsable,
+                    NombreUsuario = _context.Usuarios
+                        .Where(u => u.IdUsuario == h.UsuarioResponsable)
+                        .Select(u => u.Nombre + " " + u.Apellido)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            if (historial == null || historial.Count == 0)
+            {
+                return NotFound(new { message = "No hay historial para este curso." });
+            }
+
+            return Ok(historial);
         }
 
         [HttpGet("usuario/{id_usuario}/cursos")]
@@ -77,6 +174,7 @@ namespace Apirest.Controllers
                     r => r.IdCurso,
                     c => c.IdCurso,
                     (r, c) => c)
+                .Where(c => c.Estado)
                 .Distinct()
                 .Select(c => new { c.IdCurso, c.NombreCurso })
                 .ToListAsync();
@@ -104,6 +202,7 @@ namespace Apirest.Controllers
             // Obtener secciones solo para el año escolar activo
             var secciones = await _context.AsignacionesDocente
                 .Where(a => a.IdUsuarioDocente == id_docente && a.IdAnioEscolar == anioActivo.IdAnioEscolar)
+                .Where(a => a.RamaCurso.Curso.Estado)
                 .Select(a => new
                 {
                     a.IdAsignacion,
@@ -159,6 +258,7 @@ namespace Apirest.Controllers
 
             var cursos = await _context.TemasCurso
                 .Where(t => t.IdGrado == estudianteGrado.IdGrado)
+                .Where(t => t.RamaCurso.Curso.Estado)
                 .Select(t => new
                 {
                     t.IdRama,
@@ -179,6 +279,7 @@ namespace Apirest.Controllers
         {
             var notas = await _context.Notas
                 .Where(n => n.IdUsuarioEstudiante == id_usuario && n.IdAnioEscolar == id_anio && n.TemaCurso.IdRama == id_rama)
+                .Where(n => n.TemaCurso.RamaCurso.Curso.Estado)
                 .Select(n => new
                 {
                     IdNota = n.IdNota,
@@ -208,7 +309,7 @@ namespace Apirest.Controllers
                     nt => nt.t.IdRama,
                     r => r.IdRama,
                     (nt, r) => new { nt.n, nt.t, r })
-                .Where(x => x.r.IdCurso == id_curso)
+                .Where(x => x.r.IdCurso == id_curso && x.r.Curso.Estado)
                 .Select(x => new 
                 {
                     x.n.IdNota,
