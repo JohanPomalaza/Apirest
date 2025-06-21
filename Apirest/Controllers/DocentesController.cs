@@ -76,6 +76,38 @@ namespace Apirest.Controllers
         await _context.SaveChangesAsync();
         return Ok(asignacion);
     }
-        
+
+        // GET: api/Docentes/{idDocente}/historial
+        [HttpGet("{idDocente}/historial")]
+        public async Task<IActionResult> ObtenerHistorialDocente(int idDocente)
+        {
+            var historial = await _context.HistorialDocentes
+                .Where(h => h.IdUsuarioDocente == idDocente)
+                .OrderByDescending(h => h.FechaCambio)
+                .Select(h => new
+                {
+                    h.IdHistorial,
+                    h.IdAsignacion,
+                    h.IdUsuarioDocente,
+                    h.IdRama,
+                    h.IdGrado,
+                    h.IdAnioEscolar,
+                    h.Accion,
+                    FechaCambio = h.FechaCambio.HasValue ? h.FechaCambio.Value.ToString("yyyy-MM-dd HH:mm:ss") : null,
+                    NombreResponsable = _context.Usuarios
+                        .Where(u => u.IdUsuario == h.UsuarioResponsable)
+                        .Select(u => u.Nombre)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            if (historial.Count == 0)
+                return NotFound(new { message = "No hay historial para el docente indicado." });
+
+            return Ok(historial);
+        }
+
+
+
     }
 }

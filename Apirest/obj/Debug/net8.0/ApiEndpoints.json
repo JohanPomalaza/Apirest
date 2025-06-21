@@ -431,6 +431,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "ObtenerHistorialDocente",
+    "RelativePath": "api/Docentes/{idDocente}/historial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDocente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Apirest.Controllers.EstudiantesController",
     "Method": "GetEstudiantes",
     "RelativePath": "api/Estudiantes",
@@ -503,6 +519,22 @@
       {
         "Name": "asignacion",
         "Type": "Apirest.Modelos.EstudianteGrado",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.EstudiantesController",
+    "Method": "ObtenerHistorialEstudiante",
+    "RelativePath": "api/Estudiantes/{idEstudiante}/historial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEstudiante",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

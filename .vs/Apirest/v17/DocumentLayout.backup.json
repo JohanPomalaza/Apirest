@@ -1,18 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\johan\\source\\repos\\Apirest\\",
+  "WorkspaceRootPath": "D:\\Alexander\\Documents\\GitHub\\Apirest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\controllers\\ramascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\ramascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\historialramas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\historialramas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\controllers\\cursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\controllers\\cursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\cursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\controllers\\docentescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\docentescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\modelos\\historialnotas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\historialnotas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\modelos\\appdbcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\appdbcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\controllers\\estudiantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\estudiantescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\modelos\\historialestudiantes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\historialestudiantes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|d:\\alexander\\documents\\github\\apirest\\apirest\\modelos\\historialcursos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\historialcursos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,43 +53,93 @@
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "HistorialRamas.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\HistorialRamas.cs",
-              "RelativeDocumentMoniker": "Apirest\\Modelos\\HistorialRamas.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\HistorialRamas.cs",
-              "RelativeToolTip": "Apirest\\Modelos\\HistorialRamas.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAAwCAAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-19T03:34:01.359Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "RamasCursoController.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\RamasCursoController.cs",
-              "RelativeDocumentMoniker": "Apirest\\Controllers\\RamasCursoController.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\RamasCursoController.cs",
-              "RelativeToolTip": "Apirest\\Controllers\\RamasCursoController.cs",
-              "ViewState": "AgIAAIkAAAAAAAAAAAAYwKQAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "DocentesController.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\DocentesController.cs",
+              "RelativeDocumentMoniker": "Apirest\\Controllers\\DocentesController.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\DocentesController.cs",
+              "RelativeToolTip": "Apirest\\Controllers\\DocentesController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAIwHEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-19T03:29:22.23Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-20T17:15:37.217Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "CursoController.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\CursoController.cs",
-              "RelativeDocumentMoniker": "Apirest\\Controllers\\CursoController.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\CursoController.cs",
-              "RelativeToolTip": "Apirest\\Controllers\\CursoController.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAcwCoAAAAnAAAAAAAAAA==",
+              "Title": "HistorialNotas.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialNotas.cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\HistorialNotas.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialNotas.cs",
+              "RelativeToolTip": "Apirest\\Modelos\\HistorialNotas.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-19T02:14:01.114Z",
+              "WhenOpened": "2025-06-20T17:14:57.783Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppDbContext .cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\AppDbContext .cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\AppDbContext .cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\AppDbContext .cs",
+              "RelativeToolTip": "Apirest\\Modelos\\AppDbContext .cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAA6wB4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-20T16:31:43.019Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CursoController.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\CursoController.cs",
+              "RelativeDocumentMoniker": "Apirest\\Controllers\\CursoController.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\CursoController.cs",
+              "RelativeToolTip": "Apirest\\Controllers\\CursoController.cs",
+              "ViewState": "AgIAAIgBAAAAAAAAAAA6wGIBAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-20T15:18:15.315Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EstudiantesController.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\EstudiantesController.cs",
+              "RelativeDocumentMoniker": "Apirest\\Controllers\\EstudiantesController.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Controllers\\EstudiantesController.cs",
+              "RelativeToolTip": "Apirest\\Controllers\\EstudiantesController.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAcwEwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-20T14:53:30.796Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HistorialCursos.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialCursos.cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\HistorialCursos.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialCursos.cs",
+              "RelativeToolTip": "Apirest\\Modelos\\HistorialCursos.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-20T15:08:57.016Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "HistorialEstudiantes.cs",
+              "DocumentMoniker": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialEstudiantes.cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\HistorialEstudiantes.cs",
+              "ToolTip": "D:\\Alexander\\Documents\\GitHub\\Apirest\\Apirest\\Modelos\\HistorialEstudiantes.cs",
+              "RelativeToolTip": "Apirest\\Modelos\\HistorialEstudiantes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-20T14:48:29.045Z"
             }
           ]
         }
