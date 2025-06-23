@@ -27,7 +27,9 @@ namespace Apirest.Modelos
         public DbSet<HistorialCursos> HistorialCursos { get; set; }
         public DbSet<HistorialRamas> HistorialRamas { get; set; }
         public DbSet<HistorialTemas> HistorialTemas { get; set; }
+        public DbSet<HistorialEstudiantes> HistorialEstudiantes { get; set; }
 
+        public DbSet<HistorialDocentes> HistorialDocentes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
