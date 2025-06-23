@@ -627,17 +627,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteCrearDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteCrearDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteCrearDto"
               }
             }
           }
@@ -669,17 +669,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteEditarDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteEditarDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/DocenteEditarDto"
               }
             }
           }
@@ -711,17 +711,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AsignacionesDocente"
+                "$ref": "#/components/schemas/AsignacionCrearDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AsignacionesDocente"
+                "$ref": "#/components/schemas/AsignacionCrearDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AsignacionesDocente"
+                "$ref": "#/components/schemas/AsignacionCrearDto"
               }
             }
           }
@@ -729,6 +729,184 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{idDocente}/asignaciones": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idDocente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AsignacionDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AsignacionDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AsignacionDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Docentes/asignacion/{idAsignacion}": {
+      "put": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idAsignacion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionActualizarDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionActualizarDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionActualizarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{idDocente}/inactivar": {
+      "put": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idDocente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/ramas": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Docentes/grados": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { }
+                }
+              }
+            }
           }
         }
       }
@@ -1372,8 +1550,48 @@
             "type": "integer",
             "format": "int32"
           },
-          "activo": {
+          "estado": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AsignacionActualizarDto": {
+        "type": "object",
+        "properties": {
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AsignacionCrearDto": {
+        "type": "object",
+        "properties": {
+          "idUsuarioDocente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAsignador": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAnioEscolar": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1381,7 +1599,15 @@
       "AsignacionDto": {
         "type": "object",
         "properties": {
+          "idUsuarioDocente": {
+            "type": "integer",
+            "format": "int32"
+          },
           "idAsignacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idAsignador": {
             "type": "integer",
             "format": "int32"
           },
@@ -1392,6 +1618,18 @@
           "ramaCursoNombre": {
             "type": "string",
             "nullable": true
+          },
+          "idGrado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gradoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "idAnioEscolar": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1476,6 +1714,28 @@
         },
         "additionalProperties": false
       },
+      "DocenteCrearDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido": {
+            "type": "string",
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contrasena": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DocenteDto": {
         "type": "object",
         "properties": {
@@ -1484,6 +1744,10 @@
             "format": "int32"
           },
           "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido": {
             "type": "string",
             "nullable": true
           },
@@ -1496,6 +1760,28 @@
             "items": {
               "$ref": "#/components/schemas/AsignacionDto"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocenteEditarDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido": {
+            "type": "string",
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contrasena": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1550,6 +1836,9 @@
           "idNivel": {
             "type": "integer",
             "format": "int32"
+          },
+          "estado": {
+            "type": "boolean"
           },
           "nivel": {
             "$ref": "#/components/schemas/NivelEducativo"
@@ -1731,6 +2020,9 @@
           "contrasena": {
             "type": "string",
             "nullable": true
+          },
+          "estado": {
+            "type": "boolean"
           },
           "idRol": {
             "type": "integer",

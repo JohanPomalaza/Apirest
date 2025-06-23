@@ -17,6 +17,8 @@ namespace Apirest.Modelos
         [ForeignKey("Nivel")]
         [Column("id_nivel")]
         public int IdNivel { get; set; }
+        [Column("estado")]
+        public bool Estado { get; set; }
         public NivelEducativo Nivel { get; set; }
 
         public ICollection<EstudianteGrado> Estudiantes { get; set; }

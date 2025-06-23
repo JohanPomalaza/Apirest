@@ -194,7 +194,7 @@ namespace Apirest.Controllers
         {
             // Obtener el año escolar activo
             var anioActivo = await _context.AnioEscolar
-                .FirstOrDefaultAsync(a => a.Activo == true);
+                .FirstOrDefaultAsync(a => a.Estado == true);
 
             if (anioActivo == null)
                 return NotFound("No hay un año escolar activo.");

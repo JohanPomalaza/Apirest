@@ -381,8 +381,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "docente",
-        "Type": "Apirest.Modelos.Usuario",
+        "Name": "docenteDto",
+        "Type": "Apirest.Modelos.DocenteCrearDto",
         "IsRequired": true
       }
     ],
@@ -402,12 +402,38 @@
         "IsRequired": true
       },
       {
-        "Name": "docenteActualizado",
-        "Type": "Apirest.Modelos.Usuario",
+        "Name": "docenteDto",
+        "Type": "Apirest.Modelos.DocenteEditarDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetAsignacionesDocente",
+    "RelativePath": "api/Docentes/{idDocente}/asignaciones",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDocente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Apirest.Modelos.AsignacionDto, Apirest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "Apirest.Controllers.DocentesController",
@@ -423,12 +449,89 @@
         "IsRequired": true
       },
       {
-        "Name": "asignacion",
-        "Type": "Apirest.Modelos.AsignacionesDocente",
+        "Name": "dto",
+        "Type": "Apirest.Modelos.AsignacionCrearDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "InactivarDocente",
+    "RelativePath": "api/Docentes/{idDocente}/inactivar",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDocente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "ActualizarAsignacion",
+    "RelativePath": "api/Docentes/asignacion/{idAsignacion}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAsignacion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Apirest.Modelos.AsignacionActualizarDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetGrados",
+    "RelativePath": "api/Docentes/grados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetRamas",
+    "RelativePath": "api/Docentes/ramas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "Apirest.Controllers.EstudiantesController",

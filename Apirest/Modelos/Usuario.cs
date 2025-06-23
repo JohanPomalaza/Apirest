@@ -21,6 +21,8 @@ namespace Apirest.Modelos
 
         [Column("contrasena")]
         public string Contrasena { get; set; }
+        [Column("estado")]
+        public bool Estado { get; set; }
 
         [ForeignKey("Rol")]
         [Column("id_rol")]

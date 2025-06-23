@@ -10,6 +10,6 @@ namespace Apirest.Modelos
         [Column("id_anio_escolar")]
         public int IdAnioEscolar { get; set; }
         public int Anio { get; set; }
-        public bool Activo { get; set; }
+        public bool Estado { get; set; }
     }
 }
