@@ -923,25 +923,19 @@
               "text/plain": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Usuario"
-                  }
+                  "items": { }
                 }
               },
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Usuario"
-                  }
+                  "items": { }
                 }
               },
               "text/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Usuario"
-                  }
+                  "items": { }
                 }
               }
             }
@@ -956,17 +950,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             }
           }
@@ -998,17 +992,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Usuario"
+                "$ref": "#/components/schemas/EstudianteCrearDto"
               }
             }
           }
@@ -1040,21 +1034,56 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EstudianteGrado"
+                "$ref": "#/components/schemas/AsignacionGradoDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/EstudianteGrado"
+                "$ref": "#/components/schemas/AsignacionGradoDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/EstudianteGrado"
+                "$ref": "#/components/schemas/AsignacionGradoDto"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes/grados": {
+      "get": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes/{idEstudiante}/historial": {
+      "get": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "parameters": [
+          {
+            "name": "idEstudiante",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1539,23 +1568,6 @@
   },
   "components": {
     "schemas": {
-      "AnioEscolar": {
-        "type": "object",
-        "properties": {
-          "idAnioEscolar": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "anio": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "estado": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "AsignacionActualizarDto": {
         "type": "object",
         "properties": {
@@ -1634,25 +1646,9 @@
         },
         "additionalProperties": false
       },
-      "AsignacionesDocente": {
+      "AsignacionGradoDto": {
         "type": "object",
         "properties": {
-          "idAsignacion": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idUsuarioDocente": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idAsignador": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idRama": {
-            "type": "integer",
-            "format": "int32"
-          },
           "idGrado": {
             "type": "integer",
             "format": "int32"
@@ -1661,20 +1657,8 @@
             "type": "integer",
             "format": "int32"
           },
-          "usuarioDocente": {
-            "$ref": "#/components/schemas/Usuario"
-          },
-          "asignador": {
-            "$ref": "#/components/schemas/Usuario"
-          },
-          "ramaCurso": {
-            "$ref": "#/components/schemas/RamasCurso"
-          },
-          "grado": {
-            "$ref": "#/components/schemas/Grado"
-          },
-          "anioEscolar": {
-            "$ref": "#/components/schemas/AnioEscolar"
+          "estado": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1787,67 +1771,23 @@
         },
         "additionalProperties": false
       },
-      "EstudianteGrado": {
+      "EstudianteCrearDto": {
         "type": "object",
         "properties": {
-          "idEstudianteGrado": {
-            "type": "integer",
-            "format": "int32"
+          "nombre": {
+            "type": "string",
+            "nullable": true
           },
-          "idUsuarioEstudiante": {
-            "type": "integer",
-            "format": "int32"
+          "apellido": {
+            "type": "string",
+            "nullable": true
           },
-          "idGrado": {
-            "type": "integer",
-            "format": "int32"
+          "correo": {
+            "type": "string",
+            "nullable": true
           },
-          "idAnioEscolar": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "usuarioEstudiante": {
-            "$ref": "#/components/schemas/Usuario"
-          },
-          "grado": {
-            "$ref": "#/components/schemas/Grado"
-          },
-          "anioEscolar": {
-            "$ref": "#/components/schemas/AnioEscolar"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Grado": {
-        "required": [
-          "nombreGrado"
-        ],
-        "type": "object",
-        "properties": {
-          "idGrado": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nombreGrado": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "idNivel": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "estado": {
-            "type": "boolean"
-          },
-          "nivel": {
-            "$ref": "#/components/schemas/NivelEducativo"
-          },
-          "estudiantes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EstudianteGrado"
-            },
+          "contrasena": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1862,31 +1802,6 @@
           },
           "contrasena": {
             "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "NivelEducativo": {
-        "required": [
-          "nombreNivel"
-        ],
-        "type": "object",
-        "properties": {
-          "idNivel": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nombreNivel": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "grados": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Grado"
-            },
             "nullable": true
           }
         },
@@ -1918,44 +1833,6 @@
             "format": "int32"
           },
           "nombre": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RamasCurso": {
-        "type": "object",
-        "properties": {
-          "idRama": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "idCurso": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "curso": {
-            "$ref": "#/components/schemas/Cursos"
-          },
-          "nombre": {
-            "type": "string",
-            "nullable": true
-          },
-          "estado": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Rol": {
-        "type": "object",
-        "properties": {
-          "id_rol": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nombre_rol": {
             "type": "string",
             "nullable": true
           }
@@ -1994,67 +1871,6 @@
           "idRama": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Usuario": {
-        "type": "object",
-        "properties": {
-          "idUsuario": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nombre": {
-            "type": "string",
-            "nullable": true
-          },
-          "apellido": {
-            "type": "string",
-            "nullable": true
-          },
-          "correo": {
-            "type": "string",
-            "nullable": true
-          },
-          "contrasena": {
-            "type": "string",
-            "nullable": true
-          },
-          "estado": {
-            "type": "boolean"
-          },
-          "idRol": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rol": {
-            "$ref": "#/components/schemas/Rol"
-          },
-          "esDocente": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "estudiantesGrado": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EstudianteGrado"
-            },
-            "nullable": true
-          },
-          "asignacionesComoDocente": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AsignacionesDocente"
-            },
-            "nullable": true
-          },
-          "asignacionesComoAsignador": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AsignacionesDocente"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false

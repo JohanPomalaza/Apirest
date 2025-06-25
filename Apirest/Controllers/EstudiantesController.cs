@@ -6,68 +6,114 @@ using System;
 
 namespace Apirest.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EstudiantesController : ControllerBase
     {
         private readonly AppDbContext _context;
+
         public EstudiantesController(AppDbContext context)
         {
             _context = context;
         }
+
+        // GET: api/Estudiantes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetEstudiantes()
+        public async Task<ActionResult<IEnumerable<object>>> GetEstudiantes()
         {
-            return await _context.Usuarios
-                .Where(u => u.IdRol == 2) // Suponiendo que 2 es el rol estudiante
-                .Include(u => u.EstudiantesGrado)
-                .ThenInclude(eg => eg.Grado)
+            var estudiantes = await _context.Usuarios
+                .Where(u => u.IdRol == 2)
+                .Select(u => new
+                {
+                    u.IdUsuario,
+                    u.Nombre,
+                    u.Apellido,
+                    Grado = _context.EstudianteGrado
+                                .Where(eg => eg.IdUsuarioEstudiante == u.IdUsuario && eg.Estado)
+                                .OrderByDescending(eg => eg.IdEstudianteGrado) // por si hay varios, toma el más reciente
+                                .Select(eg => eg.Grado.NombreGrado)
+                                .FirstOrDefault()
+                })
                 .ToListAsync();
+
+            return Ok(estudiantes);
         }
 
+        // POST: api/Estudiantes
         [HttpPost]
-        public async Task<ActionResult> CrearEstudiante(Usuario estudiante)
+        public async Task<ActionResult> CrearEstudiante([FromBody] EstudianteCrearDto dto)
         {
-            if (estudiante.IdRol != 2)
-                return BadRequest("El usuario debe tener el rol de estudiante.");
+            var estudiante = new Usuario
+            {
+                Nombre = dto.Nombre,
+                Apellido = dto.Apellido,
+                Correo = dto.Correo,
+                Contrasena = dto.Contrasena,
+                IdRol = 2,
+                Estado = true
+            };
 
             _context.Usuarios.Add(estudiante);
             await _context.SaveChangesAsync();
-            return Ok(estudiante);
+
+            return Ok(new { estudiante.IdUsuario, estudiante.Nombre, estudiante.Apellido });
         }
 
+        // PUT: api/Estudiantes/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditarEstudiante(int id, Usuario estudianteActualizado)
+        public async Task<ActionResult> EditarEstudiante(int id, [FromBody] EstudianteCrearDto dto)
         {
-            var existente = await _context.Usuarios.FindAsync(id);
-            if (existente == null || existente.IdRol != 2)
-                return NotFound();
+            var estudiante = await _context.Usuarios.FindAsync(id);
 
-            existente.Nombre = estudianteActualizado.Nombre;
-            existente.Apellido = estudianteActualizado.Apellido;
-            existente.Correo = estudianteActualizado.Correo;
-            existente.Contrasena = estudianteActualizado.Contrasena;
+            if (estudiante == null || estudiante.IdRol != 2)
+                return NotFound(new { message = "Estudiante no encontrado." });
+
+            estudiante.Nombre = dto.Nombre;
+            estudiante.Apellido = dto.Apellido;
+            estudiante.Correo = dto.Correo;
+            estudiante.Contrasena = dto.Contrasena;
 
             await _context.SaveChangesAsync();
-            return Ok(existente);
+
+            return Ok(new { estudiante.IdUsuario, estudiante.Nombre, estudiante.Apellido });
         }
 
+        // POST: api/Estudiantes/{idEstudiante}/asignar
         [HttpPost("{idEstudiante}/asignar")]
-        public async Task<ActionResult> AsignarAGrado(int idEstudiante, [FromBody] EstudianteGrado asignacion)
+        public async Task<ActionResult> AsignarAGrado(int idEstudiante, [FromBody] AsignacionGradoDto dto)
         {
             var estudiante = await _context.Usuarios.FindAsync(idEstudiante);
-            if (estudiante == null || estudiante.IdRol != 2)
-                return NotFound("Estudiante no encontrado");
 
-            asignacion.IdUsuarioEstudiante = idEstudiante;
+            if (estudiante == null || estudiante.IdRol != 2)
+                return NotFound(new { message = "Estudiante no encontrado." });
+
+            var asignacion = new EstudianteGrado
+            {
+                IdUsuarioEstudiante = idEstudiante,
+                IdGrado = dto.IdGrado,
+                IdAnioEscolar = dto.IdAnioEscolar,
+                Estado = true
+            };
+
             _context.EstudianteGrado.Add(asignacion);
             await _context.SaveChangesAsync();
+
             return Ok(asignacion);
         }
+        [HttpGet("grados")]
+        public async Task<ActionResult> ObtenerGrados()
+        {
+            var grados = await _context.Grados
+                .Where(g => g.Estado)
+                .Select(g => new
+                {
+                    g.IdGrado,
+                    g.NombreGrado
+                })
+                .ToListAsync();
 
-      
-
-
+            return Ok(grados);
+        }
         // GET: api/Estudiantes/{idEstudiante}/historial
         [HttpGet("{idEstudiante}/historial")]
         public async Task<IActionResult> ObtenerHistorialEstudiante(int idEstudiante)

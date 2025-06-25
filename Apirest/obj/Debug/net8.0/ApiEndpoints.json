@@ -543,7 +543,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Apirest.Modelos.Usuario, Apirest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -562,8 +562,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "estudiante",
-        "Type": "Apirest.Modelos.Usuario",
+        "Name": "dto",
+        "Type": "Apirest.Modelos.EstudianteCrearDto",
         "IsRequired": true
       }
     ],
@@ -583,8 +583,8 @@
         "IsRequired": true
       },
       {
-        "Name": "estudianteActualizado",
-        "Type": "Apirest.Modelos.Usuario",
+        "Name": "dto",
+        "Type": "Apirest.Modelos.EstudianteCrearDto",
         "IsRequired": true
       }
     ],
@@ -604,11 +604,37 @@
         "IsRequired": true
       },
       {
-        "Name": "asignacion",
-        "Type": "Apirest.Modelos.EstudianteGrado",
+        "Name": "dto",
+        "Type": "Apirest.Modelos.AsignacionGradoDto",
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.EstudiantesController",
+    "Method": "ObtenerHistorialEstudiante",
+    "RelativePath": "api/Estudiantes/{idEstudiante}/historial",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEstudiante",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.EstudiantesController",
+    "Method": "ObtenerGrados",
+    "RelativePath": "api/Estudiantes/grados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

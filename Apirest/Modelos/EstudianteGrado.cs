@@ -18,6 +18,7 @@ namespace Apirest.Modelos
 
         [Column("id_anio_escolar")]
         public int IdAnioEscolar { get; set; }
+        public bool Estado { get; set; }
 
       
         [ForeignKey(nameof(IdUsuarioEstudiante))]
