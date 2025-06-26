@@ -10,7 +10,8 @@ namespace Apirest.Modelos
         [Column("id_nota")]
         public int IdNota { get; set; }
 
-        public string Comentario { get; set; }
+        public string? Comentario { get; set; }
+        public string? Justificacion { get; set; }
 
         [ForeignKey("TemaCurso")]
         [Column("id_tema")]

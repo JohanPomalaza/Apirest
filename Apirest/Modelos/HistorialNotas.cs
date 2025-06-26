@@ -23,16 +23,18 @@ namespace Apirest.Modelos
         public int IdUsuarioDocente { get; set; }
 
         [Column("nota_anterior")]
-        public string NotaAnterior { get; set; }
+        public string? NotaAnterior { get; set; }
 
         [Column("nota_nueva")]
-        public string NotaNueva { get; set; }
+        public string? NotaNueva { get; set; }
 
         [Column("comentario_anterior")]
-        public string ComentarioAnterior { get; set; }
+        public string? ComentarioAnterior { get; set; }
 
         [Column("comentario_nuevo")]
-        public string ComentarioNuevo { get; set; }
+        public string? ComentarioNuevo { get; set; }
+        [Column("justificacion")]
+        public string? Justificacion { get; set; }
 
         [Column("accion")]
         public string Accion { get; set; }

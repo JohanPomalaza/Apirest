@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Apirest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+311bad888b4cc29070b42d49523350c4b7d08c92")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eefc4e41dc79490a604a3cb74d674e8c2697075f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Apirest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Apirest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -551,6 +551,13 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "justificacion",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

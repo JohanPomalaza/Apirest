@@ -275,6 +275,11 @@
         "Name": "id_usuario_docente",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "justificacion",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

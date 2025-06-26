@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 
 namespace Apirest.Controllers
@@ -330,7 +331,7 @@ namespace Apirest.Controllers
 
         [HttpPost("notas/comentario")]
         public async Task<IActionResult> AgregarOEditarNotaConComentario(
-    int id_usuario_estudiante, int id_tema, string nota, string comentario, int id_usuario_docente)
+    int id_usuario_estudiante, int id_tema, string nota, string comentario, int id_usuario_docente,string justificacion)
         {
             var existingNota = await _context.Notas
                 .FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
@@ -348,6 +349,7 @@ namespace Apirest.Controllers
                 // Actualizar nota
                 existingNota.Nota = nota;
                 existingNota.Comentario = comentario;
+                existingNota.Justificacion = justificacion;
                 _context.Notas.Update(existingNota);
 
                 accion = "ACTUALIZAR";
@@ -379,6 +381,7 @@ namespace Apirest.Controllers
                 NotaNueva = nota,
                 ComentarioAnterior = comentarioAnterior,
                 ComentarioNuevo = comentario,
+                Justificacion = justificacion,
                 Accion = accion,
                 FechaCambio = DateTime.Now
             };
@@ -411,6 +414,7 @@ namespace Apirest.Controllers
                     h.ComentarioAnterior,
                     h.ComentarioNuevo,
                     h.Accion,
+                    h.Justificacion,
                     FechaCambio = h.FechaCambio.ToString("yyyy-MM-dd HH:mm:ss")
                 })
                 .ToListAsync();
