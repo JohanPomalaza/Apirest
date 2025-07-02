@@ -13,8 +13,8 @@ namespace Apirest.Modelos
         public int IdTema { get; set; }
         public string Accion { get; set; }
 
-        public string NombreAnterior { get; set; }
-        public string NombreNuevo { get; set; }
+        public string? NombreAnterior { get; set; }
+        public string? NombreNuevo { get; set; }
 
         public int? IdRamaAnterior { get; set; }
         public int? IdRamaNueva { get; set; }

@@ -193,33 +193,39 @@ namespace Apirest.Controllers
         [HttpGet("docente/{id_docente}/secciones")]
         public async Task<ActionResult<IEnumerable<object>>> GetSeccionesAsignadas(int id_docente)
         {
-            // Obtener el año escolar activo
             var anioActivo = await _context.AnioEscolar
                 .FirstOrDefaultAsync(a => a.Estado == true);
 
             if (anioActivo == null)
                 return NotFound("No hay un año escolar activo.");
 
-            // Obtener secciones solo para el año escolar activo
-            var secciones = await _context.AsignacionesDocente
+            // Obtener asignaciones y agrupar por grado y sección
+            var agrupado = await _context.AsignacionesDocente
                 .Where(a => a.IdUsuarioDocente == id_docente && a.IdAnioEscolar == anioActivo.IdAnioEscolar)
                 .Where(a => a.RamaCurso.Curso.Estado)
-                .Select(a => new
+                .Include(a => a.Grado)
+                    .ThenInclude(g => g.Nivel) 
+                .Include(a => a.RamaCurso)
+                    .ThenInclude(r => r.Curso)
+                .GroupBy(a => new { a.IdGrado, a.Grado.NombreGrado,a.IdAnioEscolar }) 
+                .Select(g => new
                 {
-                    a.IdAsignacion,
-                    a.IdGrado,
-                    Grado = a.Grado.NombreGrado,
-                    a.IdRama,
-                    Rama = a.RamaCurso.Nombre,
-                    Curso = a.RamaCurso.Curso.NombreCurso,
-                    a.IdAnioEscolar
+                    IdGrado = g.Key.IdGrado,
+                    Grado = g.Key.NombreGrado,
+                    IdAnioEscolar = g.Key.IdAnioEscolar,
+                    Cursos = g.Select(a => new
+                    {
+                        a.IdRama,
+                        Rama = a.RamaCurso.Nombre,
+                        Curso = a.RamaCurso.Curso.NombreCurso
+                    }).Distinct()
                 })
                 .ToListAsync();
 
-            if (!secciones.Any())
+            if (!agrupado.Any())
                 return NotFound("No hay secciones asignadas a este docente para el año escolar activo.");
 
-            return Ok(secciones);
+            return Ok(agrupado);
         }
         /*-----------------------------------------------------------*/
 
@@ -259,6 +265,48 @@ namespace Apirest.Controllers
 
             var cursos = await _context.TemasCurso
                 .Where(t => t.IdGrado == estudianteGrado.IdGrado)
+                .Where(t => t.RamaCurso.Curso.Estado)
+                .Select(t => new
+                {
+                    t.IdRama,
+                    Rama = t.RamaCurso.Nombre,
+                    Curso = t.RamaCurso.Curso.NombreCurso,
+                    IdCurso = t.RamaCurso.IdCurso
+                })
+                .Distinct()
+                .ToListAsync();
+
+            return Ok(cursos);
+        }
+        [HttpGet("alumno/{id_usuario}/docente/{id_docente}/cursos")]
+        public async Task<ActionResult<IEnumerable<object>>> GetCursosDelAlumnoPorDocente(int id_usuario, int id_docente)
+        {
+            // 1. Obtener la asignación del estudiante más reciente
+            var estudianteGrado = await _context.EstudianteGrado
+                .Where(e => e.IdUsuarioEstudiante == id_usuario)
+                .OrderByDescending(e => e.IdAnioEscolar)
+                .FirstOrDefaultAsync();
+
+            if (estudianteGrado == null)
+                return NotFound("No se encontró la información del estudiante.");
+
+            var idGrado = estudianteGrado.IdGrado;
+            var idAnio = estudianteGrado.IdAnioEscolar;
+
+            // 2. Obtener las ramas/cursos asignadas al docente para ese grado y año escolar
+            var ramasDocente = await _context.AsignacionesDocente
+                .Where(a => a.IdUsuarioDocente == id_docente
+                            && a.IdGrado == idGrado
+                            && a.IdAnioEscolar == idAnio)
+                .Select(a => a.IdRama)
+                .ToListAsync();
+
+            if (!ramasDocente.Any())
+                return NotFound("El docente no tiene cursos asignados en este grado para este año.");
+
+            // 3. Obtener los cursos del estudiante que coincidan con las ramas del docente
+            var cursos = await _context.TemasCurso
+                .Where(t => t.IdGrado == idGrado && ramasDocente.Contains(t.IdRama))
                 .Where(t => t.RamaCurso.Curso.Estado)
                 .Select(t => new
                 {
@@ -331,7 +379,7 @@ namespace Apirest.Controllers
 
         [HttpPost("notas/comentario")]
         public async Task<IActionResult> AgregarOEditarNotaConComentario(
-    int id_usuario_estudiante, int id_tema, string nota, string comentario, int id_usuario_docente,string justificacion)
+        int id_usuario_estudiante, int id_tema, string nota, string comentario, int id_usuario_docente,string justificacion)
         {
             var existingNota = await _context.Notas
                 .FirstOrDefaultAsync(n => n.IdUsuarioEstudiante == id_usuario_estudiante && n.IdTema == id_tema);
@@ -370,6 +418,9 @@ namespace Apirest.Controllers
                 accion = "CREAR";
             }
 
+            var tema = await _context.TemasCurso.FirstOrDefaultAsync(t => t.IdTema == id_tema);
+            string nombreTema = tema != null ? tema.Nombre : $"ID {id_tema}";
+
             // Agregar al historial
             var historial = new HistorialNotas
             {
@@ -387,6 +438,18 @@ namespace Apirest.Controllers
             };
 
             await _context.HistorialNotas.AddAsync(historial);
+            await _context.SaveChangesAsync();
+
+            var notificacion = new Notificacion
+            {
+                IdUsuarioDestino = id_usuario_estudiante,
+                Titulo = accion == "CREAR" ? "Nueva nota registrada" : "Nota actualizada",
+                Mensaje = $"Tu profesor ha {accion.ToLower()}do tu nota del tema \"{nombreTema}\".",
+                Fecha = DateTime.Now,
+                Leida = false
+            };
+
+            await _context.Notificaciones.AddAsync(notificacion);
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Nota guardada y registrada en historial correctamente." });
@@ -423,6 +486,56 @@ namespace Apirest.Controllers
                 return NotFound(new { message = "No hay historial para la nota indicada." });
 
             return Ok(historial);
+        }
+        /*----------------------NOTFICACIONES------------------------*/
+        [HttpPut("notificaciones/{id}/leer")]
+        public async Task<IActionResult> MarcarNotificacionComoLeida(int id)
+        {
+            var notificacion = await _context.Notificaciones.FindAsync(id);
+            if (notificacion == null)
+                return NotFound(new { message = "Notificación no encontrada" });
+
+            notificacion.Leida = true;
+            _context.Notificaciones.Update(notificacion);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Notificación marcada como leída" });
+        }
+        [HttpGet("notificaciones/estudiante/{id_usuario}")]
+        public async Task<IActionResult> GetNotificacionesNoLeidas(int id_usuario)
+        {
+            var notificaciones = await _context.Notificaciones
+                .Where(n => n.IdUsuarioDestino == id_usuario && !n.Leida)
+                .OrderByDescending(n => n.Fecha)
+                .Select(n => new
+                {
+                    n.IdNotificacion,
+                    n.Titulo,
+                    n.Mensaje,
+                    n.Fecha,
+                    n.Leida
+                })
+                .ToListAsync();
+
+            return Ok(notificaciones);
+        }
+        [HttpGet("notificaciones/estudiante/{id_usuario}/todas")]
+        public async Task<IActionResult> GetHistorialNotificaciones(int id_usuario)
+        {
+            var notificaciones = await _context.Notificaciones
+                .Where(n => n.IdUsuarioDestino == id_usuario)
+                .OrderByDescending(n => n.Fecha)
+                .Select(n => new
+                {
+                    n.IdNotificacion,
+                    n.Titulo,
+                    n.Mensaje,
+                    n.Fecha,
+                    n.Leida
+                })
+                .ToListAsync();
+
+            return Ok(notificaciones);
         }
     }
 }

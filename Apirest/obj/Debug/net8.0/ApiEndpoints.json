@@ -172,6 +172,37 @@
   },
   {
     "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "GetCursosDelAlumnoPorDocente",
+    "RelativePath": "api/Curso/alumno/{id_usuario}/docente/{id_docente}/cursos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id_usuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "id_docente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
     "Method": "GetSeccionesAsignadas",
     "RelativePath": "api/Curso/docente/{id_docente}/secciones",
     "HttpMethod": "GET",
@@ -296,6 +327,54 @@
         "Name": "idNota",
         "Type": "System.Int32",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "MarcarNotificacionComoLeida",
+    "RelativePath": "api/Curso/notificaciones/{id}/leer",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "GetNotificacionesNoLeidas",
+    "RelativePath": "api/Curso/notificaciones/estudiante/{id_usuario}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id_usuario",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "GetHistorialNotificaciones",
+    "RelativePath": "api/Curso/notificaciones/estudiante/{id_usuario}/todas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id_usuario",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
