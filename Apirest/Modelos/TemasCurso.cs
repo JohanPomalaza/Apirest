@@ -27,5 +27,6 @@ namespace Apirest.Modelos
 
         [ForeignKey("IdGrado")]
         public virtual Grado Grado { get; set; }
+        public bool Estado { get; set; }
     }
 }

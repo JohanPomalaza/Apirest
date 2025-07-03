@@ -30,7 +30,7 @@ namespace Apirest.Controllers
         public async Task<IActionResult> GetTemasPorRama(int idRama)
         {
             var temas = await _context.TemasCurso
-                .Where(t => t.IdRama == idRama)
+                .Where(t => t.IdRama == idRama && t.Estado == true)
                 .Include(t => t.Grado)
                 .ToListAsync();
             return Ok(temas);
@@ -74,7 +74,8 @@ namespace Apirest.Controllers
             {
                 Nombre = dto.Nombre,
                 IdRama = dto.IdRama,
-                IdGrado = dto.IdGrado
+                IdGrado = dto.IdGrado,
+                Estado = true
             };
 
             _context.TemasCurso.Add(tema);
@@ -90,6 +91,7 @@ namespace Apirest.Controllers
                 IdRamaNueva = tema.IdRama,
                 FechaCambio = DateTime.Now,
                 IdUsuario = idUsuario
+
             };
 
             _context.HistorialTemas.Add(historial);
@@ -103,6 +105,10 @@ namespace Apirest.Controllers
         {
             if (id != temaDto.IdTema)
                 return BadRequest("El ID no coincide");
+            var temaAntes = await _context.TemasCurso.AsNoTracking().FirstOrDefaultAsync(r => r.IdTema == id);
+            if (temaAntes == null)
+                return NotFound("Tema no encontrado");
+
 
             var temaExistente = await _context.TemasCurso.FindAsync(id);
             if (temaExistente == null)
@@ -130,7 +136,10 @@ namespace Apirest.Controllers
                 IdRamaAnterior = idRamaAnterior,
                 IdRamaNueva = temaExistente.IdRama,
                 FechaCambio = DateTime.Now,
-                IdUsuario = idUsuario
+                IdUsuario = idUsuario,
+                EstadoAnterior = temaAntes.Estado,
+                EstadoNuevo = temaExistente.Estado
+
             };
 
             _context.HistorialTemas.Add(historial);
@@ -146,8 +155,10 @@ namespace Apirest.Controllers
             var tema = await _context.TemasCurso.FindAsync(id);
             if (tema == null)
                 return NotFound();
-
-            _context.TemasCurso.Remove(tema);
+            bool estadoAnterior = tema.Estado;
+            tema.Estado = false;
+            _context.Entry(tema).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
             var historial = new HistorialTemas
             {
@@ -155,6 +166,8 @@ namespace Apirest.Controllers
                 Accion = "Eliminado",
                 NombreAnterior = tema.Nombre,
                 NombreNuevo = null,
+                EstadoAnterior = estadoAnterior,
+                EstadoNuevo = tema.Estado,
                 IdRamaAnterior = tema.IdRama,
                 IdRamaNueva = null,
                 FechaCambio = DateTime.Now,
@@ -171,7 +184,22 @@ namespace Apirest.Controllers
         {
             var historial = await _context.HistorialTemas
                 .Where(h => h.IdTema == idTema)
+                .Include(h => h.Usuario)
                 .OrderByDescending(h => h.FechaCambio)
+                .Select(h => new
+                {
+                    h.Id,
+                    h.IdTema,
+                    h.Accion,
+                    h.NombreAnterior,
+                    h.NombreNuevo,
+                    h.EstadoAnterior,
+                    h.EstadoNuevo,
+                    h.FechaCambio,
+                    h.IdUsuario,
+                    NombreUsuario = h.Usuario != null ? h.Usuario.Nombre : null
+                })
+
                 .ToListAsync();
 
             return Ok(historial);

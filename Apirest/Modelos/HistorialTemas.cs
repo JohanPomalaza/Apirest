@@ -18,8 +18,13 @@ namespace Apirest.Modelos
 
         public int? IdRamaAnterior { get; set; }
         public int? IdRamaNueva { get; set; }
+        public bool? EstadoAnterior { get; set; }
+
+        public bool? EstadoNuevo { get; set; }
 
         public DateTime FechaCambio { get; set; }
         public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public Usuario Usuario { get; set; }
     }
 }
