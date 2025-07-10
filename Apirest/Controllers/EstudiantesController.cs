@@ -22,17 +22,25 @@ namespace Apirest.Controllers
         public async Task<ActionResult<IEnumerable<object>>> GetEstudiantes()
         {
             var estudiantes = await _context.Usuarios
-                .Where(u => u.IdRol == 2)
+                .Where(u => u.IdRol == 2 && u.Estado)
                 .Select(u => new
                 {
                     u.IdUsuario,
                     u.Nombre,
                     u.Apellido,
-                    Grado = _context.EstudianteGrado
-                                .Where(eg => eg.IdUsuarioEstudiante == u.IdUsuario && eg.Estado)
-                                .OrderByDescending(eg => eg.IdEstudianteGrado) // por si hay varios, toma el más reciente
-                                .Select(eg => eg.Grado.NombreGrado)
-                                .FirstOrDefault()
+                    u.Correo,
+                    Asignacion = _context.EstudianteGrado
+                        .Where(e => e.IdUsuarioEstudiante == u.IdUsuario && e.Estado)
+                        .OrderByDescending(e => e.IdEstudianteGrado)
+                        .Select(e => new
+                        {
+                            e.IdGrado,
+                            GradoNombre = e.Grado.NombreGrado,
+                            e.IdSeccion,
+                            SeccionNombre = e.Seccion.Nombre,
+                            e.IdAnioEscolar
+                        })
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
@@ -43,6 +51,12 @@ namespace Apirest.Controllers
         [HttpPost]
         public async Task<ActionResult> CrearEstudiante([FromBody] EstudianteCrearDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (await _context.Usuarios.AnyAsync(u => u.Correo == dto.Correo))
+                return Conflict("Ya existe un usuario con ese correo.");
+
             var estudiante = new Usuario
             {
                 Nombre = dto.Nombre,
@@ -56,7 +70,12 @@ namespace Apirest.Controllers
             _context.Usuarios.Add(estudiante);
             await _context.SaveChangesAsync();
 
-            return Ok(new { estudiante.IdUsuario, estudiante.Nombre, estudiante.Apellido });
+            return Ok(new
+            {
+                estudiante.IdUsuario,
+                estudiante.Nombre,
+                estudiante.Apellido
+            });
         }
 
         // PUT: api/Estudiantes/{id}
@@ -64,9 +83,8 @@ namespace Apirest.Controllers
         public async Task<ActionResult> EditarEstudiante(int id, [FromBody] EstudianteCrearDto dto)
         {
             var estudiante = await _context.Usuarios.FindAsync(id);
-
             if (estudiante == null || estudiante.IdRol != 2)
-                return NotFound(new { message = "Estudiante no encontrado." });
+                return NotFound("Estudiante no encontrado.");
 
             estudiante.Nombre = dto.Nombre;
             estudiante.Apellido = dto.Apellido;
@@ -75,7 +93,12 @@ namespace Apirest.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { estudiante.IdUsuario, estudiante.Nombre, estudiante.Apellido });
+            return Ok(new
+            {
+                estudiante.IdUsuario,
+                estudiante.Nombre,
+                estudiante.Apellido
+            });
         }
 
         // POST: api/Estudiantes/{idEstudiante}/asignar
@@ -83,14 +106,23 @@ namespace Apirest.Controllers
         public async Task<ActionResult> AsignarAGrado(int idEstudiante, [FromBody] AsignacionGradoDto dto)
         {
             var estudiante = await _context.Usuarios.FindAsync(idEstudiante);
-
             if (estudiante == null || estudiante.IdRol != 2)
-                return NotFound(new { message = "Estudiante no encontrado." });
+                return NotFound("Estudiante no encontrado.");
+
+            if (!await _context.Grados.AnyAsync(g => g.IdGrado == dto.IdGrado))
+                return NotFound("Grado no válido.");
+
+            if (!await _context.Secciones.AnyAsync(s => s.IdSeccion == dto.IdSeccion && s.IdGrado == dto.IdGrado))
+                return NotFound("Sección no válida para el grado.");
+
+            if (!await _context.AnioEscolar.AnyAsync(a => a.IdAnioEscolar == dto.IdAnioEscolar))
+                return NotFound("Año escolar inválido.");
 
             var asignacion = new EstudianteGrado
             {
                 IdUsuarioEstudiante = idEstudiante,
                 IdGrado = dto.IdGrado,
+                IdSeccion = dto.IdSeccion,
                 IdAnioEscolar = dto.IdAnioEscolar,
                 Estado = true
             };
@@ -98,8 +130,26 @@ namespace Apirest.Controllers
             _context.EstudianteGrado.Add(asignacion);
             await _context.SaveChangesAsync();
 
+            // Registrar historial
+            _context.HistorialEstudiantes.Add(new HistorialEstudiantes
+            {
+                IdEstudianteGrado = asignacion.IdEstudianteGrado,
+                IdUsuarioEstudiante = idEstudiante,
+                IdGrado = dto.IdGrado,
+                IdSeccion = dto.IdSeccion,
+                IdAnioEscolar = dto.IdAnioEscolar,
+                EstadoAnterior = null,
+                EstadoNuevo = true,
+                Accion = "ASIGNADO",
+                FechaCambio = DateTime.Now,
+                UsuarioResponsable = dto.UsuarioResponsable
+            });
+
+            await _context.SaveChangesAsync();
+
             return Ok(asignacion);
         }
+
         [HttpGet("grados")]
         public async Task<ActionResult> ObtenerGrados()
         {
@@ -126,22 +176,57 @@ namespace Apirest.Controllers
                     h.IdHistorial,
                     h.IdUsuarioEstudiante,
                     h.IdGrado,
+                    GradoNombre = _context.Grados
+                        .Where(g => g.IdGrado == h.IdGrado)
+                        .Select(g => g.NombreGrado)
+                        .FirstOrDefault(),
+
+                    h.IdSeccion,
+                    SeccionNombre = _context.Secciones
+                        .Where(s => s.IdSeccion == h.IdSeccion)
+                        .Select(s => s.Nombre)
+                        .FirstOrDefault(),
+
                     h.IdAnioEscolar,
                     h.EstadoAnterior,
                     h.EstadoNuevo,
                     h.Accion,
-                    FechaCambio = h.FechaCambio.HasValue ? h.FechaCambio.Value.ToString("yyyy-MM-dd HH:mm:ss") : null,
+                    FechaCambio = h.FechaCambio.HasValue
+                        ? h.FechaCambio.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                        : null,
+
                     NombreResponsable = _context.Usuarios
                         .Where(u => u.IdUsuario == h.UsuarioResponsable)
-                        .Select(u => u.Nombre)
+                        .Select(u => u.Nombre + " " + u.Apellido)
                         .FirstOrDefault()
                 })
                 .ToListAsync();
 
-            if (historial.Count == 0)
+            if (!historial.Any())
                 return NotFound(new { message = "No hay historial para el estudiante indicado." });
 
             return Ok(historial);
+        }
+        [HttpPut("{idEstudiante}/inactivar")]
+        public async Task<ActionResult> InactivarEstudiante(int idEstudiante)
+        {
+            var estudiante = await _context.Usuarios.FindAsync(idEstudiante);
+
+            if (estudiante == null || estudiante.IdRol != 2)
+                return NotFound("Estudiante no encontrado.");
+
+            if (!estudiante.Estado)
+                return BadRequest("El Estudiante ya está inactivo.");
+
+            estudiante.Estado = false;
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                estudiante.IdUsuario,
+                estudiante.Nombre,
+                estudiante.Estado
+            });
         }
     }
 }

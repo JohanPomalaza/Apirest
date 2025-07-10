@@ -40,12 +40,14 @@ namespace Apirest.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearCurso([FromBody] Cursos curso, [FromQuery] int id_usuario_admin)
         {
-            curso.Estado = true;  // Se crea como activo por defecto
+            if (!await _context.NivelesEducativos.AnyAsync(n => n.IdNivel == curso.IdNivel))
+                return BadRequest("El nivel educativo especificado no existe.");
+
+            curso.Estado = true;
             _context.Cursos.Add(curso);
             await _context.SaveChangesAsync();
 
-            // Guardar en historial
-            var historial = new HistorialCursos
+            _context.HistorialCursos.Add(new HistorialCursos
             {
                 IdCurso = curso.IdCurso,
                 NombreAnterior = null,
@@ -53,8 +55,7 @@ namespace Apirest.Controllers
                 Accion = "CREAR",
                 FechaCambio = DateTime.Now,
                 UsuarioResponsable = id_usuario_admin
-            };
-            _context.HistorialCursos.Add(historial);
+            });
             await _context.SaveChangesAsync();
 
             return Ok(curso);
@@ -65,20 +66,15 @@ namespace Apirest.Controllers
         {
             var curso = await _context.Cursos.FindAsync(id);
             if (curso == null)
-            {
                 return NotFound();
-            }
 
             string nombreAnterior = curso.NombreCurso;
 
-            // Actualizamos solo el nombre
             curso.NombreCurso = cursoDto.NombreCurso;
             _context.Entry(curso).Property(c => c.NombreCurso).IsModified = true;
-
             await _context.SaveChangesAsync();
 
-            // Guardar en historial
-            var historial = new HistorialCursos
+            _context.HistorialCursos.Add(new HistorialCursos
             {
                 IdCurso = curso.IdCurso,
                 NombreAnterior = nombreAnterior,
@@ -86,11 +82,10 @@ namespace Apirest.Controllers
                 Accion = "EDITAR",
                 FechaCambio = DateTime.Now,
                 UsuarioResponsable = cursoDto.UsuarioResponsable
-            };
-            _context.HistorialCursos.Add(historial);
+            });
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(curso);
         }
 
         [HttpDelete("{id}")]
@@ -98,27 +93,22 @@ namespace Apirest.Controllers
         {
             var curso = await _context.Cursos.FindAsync(id);
             if (curso == null)
-            {
                 return NotFound();
-            }
 
             string nombreAnterior = curso.NombreCurso;
-
-            curso.Estado = false;  // Marcamos como inactivo
+            curso.Estado = false;
             _context.Entry(curso).Property(c => c.Estado).IsModified = true;
             await _context.SaveChangesAsync();
 
-            // Guardar en historial
-            var historial = new HistorialCursos
+            _context.HistorialCursos.Add(new HistorialCursos
             {
                 IdCurso = curso.IdCurso,
                 NombreAnterior = nombreAnterior,
-                NombreNuevo = curso.NombreCurso, // sigue siendo el mismo nombre
+                NombreNuevo = curso.NombreCurso,
                 Accion = "ELIMINAR",
                 FechaCambio = DateTime.Now,
                 UsuarioResponsable = id_usuario_admin
-            };
-            _context.HistorialCursos.Add(historial);
+            });
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -155,35 +145,21 @@ namespace Apirest.Controllers
         }
 
         [HttpGet("usuario/{id_usuario}/cursos")]
-        public async Task<ActionResult<IEnumerable<object>>> GetCursosPorUsuario(int id_usuario)
+        public async Task<IActionResult> GetCursosPorUsuario(int id_usuario)
         {
             var cursos = await _context.EstudianteGrado
                 .Where(eg => eg.IdUsuarioEstudiante == id_usuario)
-                .Join(_context.Grados,
-                    eg => eg.IdGrado,
-                    g => g.IdGrado,
-                    (eg, g) => g)
-                .Join(_context.TemasCurso,
-                    g => g.IdGrado,
-                    t => t.IdGrado,
-                    (g, t) => t)
-                .Join(_context.RamasCurso,
-                    t => t.IdRama,
-                    r => r.IdRama,
-                    (t, r) => r)
-                .Join(_context.Cursos,
-                    r => r.IdCurso,
-                    c => c.IdCurso,
-                    (r, c) => c)
+                .Join(_context.Grados, eg => eg.IdGrado, g => g.IdGrado, (eg, g) => g)
+                .Join(_context.TemasCurso, g => g.IdGrado, t => t.IdGrado, (g, t) => t)
+                .Join(_context.RamasCurso, t => t.IdRama, r => r.IdRama, (t, r) => r)
+                .Join(_context.Cursos, r => r.IdCurso, c => c.IdCurso, (r, c) => c)
                 .Where(c => c.Estado)
                 .Distinct()
                 .Select(c => new { c.IdCurso, c.NombreCurso })
                 .ToListAsync();
 
             if (!cursos.Any())
-            {
                 return NotFound("No hay cursos asignados para este usuario.");
-            }
 
             return Ok(cursos);
         }
@@ -199,19 +175,28 @@ namespace Apirest.Controllers
             if (anioActivo == null)
                 return NotFound("No hay un año escolar activo.");
 
-            // Obtener asignaciones y agrupar por grado y sección
             var agrupado = await _context.AsignacionesDocente
                 .Where(a => a.IdUsuarioDocente == id_docente && a.IdAnioEscolar == anioActivo.IdAnioEscolar)
                 .Where(a => a.RamaCurso.Curso.Estado)
                 .Include(a => a.Grado)
-                    .ThenInclude(g => g.Nivel) 
+                    .ThenInclude(g => g.Nivel)
+                .Include(a => a.Seccion)
                 .Include(a => a.RamaCurso)
                     .ThenInclude(r => r.Curso)
-                .GroupBy(a => new { a.IdGrado, a.Grado.NombreGrado,a.IdAnioEscolar }) 
+                .GroupBy(a => new
+                {
+                    a.IdGrado,
+                    NombreGrado = a.Grado.NombreGrado,
+                    a.IdSeccion,
+                    NombreSeccion = a.Seccion.Nombre,
+                    a.IdAnioEscolar
+                })
                 .Select(g => new
                 {
                     IdGrado = g.Key.IdGrado,
                     Grado = g.Key.NombreGrado,
+                    IdSeccion = g.Key.IdSeccion,
+                    Seccion = g.Key.NombreSeccion,
                     IdAnioEscolar = g.Key.IdAnioEscolar,
                     Cursos = g.Select(a => new
                     {
@@ -223,7 +208,7 @@ namespace Apirest.Controllers
                 .ToListAsync();
 
             if (!agrupado.Any())
-                return NotFound("No hay secciones asignadas a este docente para el año escolar activo.");
+                return NotFound("No hay asignaciones para este docente en el año escolar activo.");
 
             return Ok(agrupado);
         }
@@ -231,23 +216,40 @@ namespace Apirest.Controllers
 
 
         //SE LISTA ALUMNOS POR SECCION
-        [HttpGet("grado/{id_grado}/anio/{id_anio}/alumnos")]
-        public async Task<ActionResult<IEnumerable<object>>> GetAlumnosPorGrado(int id_grado, int id_anio)
+        [HttpGet("grado/{id_grado}/seccion/{id_seccion}/anio/{id_anio}/alumnos")]
+        public async Task<ActionResult<IEnumerable<object>>> GetAlumnosPorGradoSeccion(
+        int id_grado, int id_seccion, int id_anio)
         {
             var alumnos = await _context.EstudianteGrado
-                .Where(e => e.IdGrado == id_grado && e.IdAnioEscolar == id_anio)
+                .Where(e =>
+                    e.IdGrado == id_grado &&
+                    e.IdSeccion == id_seccion &&
+                    e.IdAnioEscolar == id_anio &&
+                    e.UsuarioEstudiante.Estado == true)
                 .Include(e => e.UsuarioEstudiante)
+                .Include(e => e.Grado)
+                .Include(e => e.Seccion)
+                .ToListAsync(); // 
+
+           
+            var alumnosUnicos = alumnos
+                .GroupBy(e => e.IdUsuarioEstudiante)
+                .Select(g => g.First())
                 .Select(e => new
                 {
                     e.IdUsuarioEstudiante,
-                    NombreCompleto = e.UsuarioEstudiante.Nombre + " " + e.UsuarioEstudiante.Apellido
+                    NombreCompleto = e.UsuarioEstudiante.Nombre + " " + e.UsuarioEstudiante.Apellido,
+                    IdGrado = e.IdGrado,
+                    GradoNombre = e.Grado.NombreGrado,
+                    IdSeccion = e.IdSeccion,
+                    SeccionNombre = e.Seccion.Nombre
                 })
-                .ToListAsync();
+                .ToList();
 
-            if (!alumnos.Any())
-                return NotFound("No hay estudiantes en esta sección.");
+            if (!alumnosUnicos.Any())
+                return NotFound("No hay estudiantes activos asignados a este grado y sección en el año escolar indicado.");
 
-            return Ok(alumnos);
+            return Ok(alumnosUnicos);
         }
         /*-----------------------------------------------------------*/
 
@@ -409,7 +411,9 @@ namespace Apirest.Controllers
                     IdUsuarioEstudiante = id_usuario_estudiante,
                     IdTema = id_tema,
                     Nota = nota,
-                    Comentario = comentario
+                    Comentario = comentario,
+                    Justificacion = justificacion,
+                    IdAnioEscolar = 4
                 };
                 await _context.Notas.AddAsync(nuevaNota);
                 await _context.SaveChangesAsync(); // Guardamos aquí para obtener id_nota
@@ -453,6 +457,31 @@ namespace Apirest.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Nota guardada y registrada en historial correctamente." });
+        }
+
+        [HttpGet("temas/pendientes")]
+        public async Task<IActionResult> GetTemasSinNota(int id_usuario_estudiante, int id_rama)
+        {
+            var temasCurso = await _context.TemasCurso
+                .Where(t => t.IdRama == id_rama)
+                .OrderBy(t => t.Orden) // Asegúrate de tener un campo "Orden"
+                .ToListAsync();
+
+            var temasConNota = await _context.Notas
+                .Where(n => n.IdUsuarioEstudiante == id_usuario_estudiante)
+                .Select(n => n.IdTema)
+                .ToListAsync();
+
+            var temasPendientes = temasCurso
+                .Where(t => !temasConNota.Contains(t.IdTema))
+                .Select(t => new {
+                    t.IdTema,
+                    t.Nombre,
+                    t.Orden
+                })
+                .ToList();
+
+            return Ok(temasPendientes);
         }
 
         [HttpGet("notas/historial")]

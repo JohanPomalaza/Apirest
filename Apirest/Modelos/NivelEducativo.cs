@@ -12,7 +12,10 @@ namespace Apirest.Modelos
 
         [Required]
         [MaxLength(50)]
+        [Column("nombre_nivel")]
         public string NombreNivel { get; set; }
+
+        public bool Estado { get; set; }
 
         public ICollection<Grado> Grados { get; set; }
     }

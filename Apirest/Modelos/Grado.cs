@@ -21,6 +21,8 @@ namespace Apirest.Modelos
         public bool Estado { get; set; }
         public NivelEducativo Nivel { get; set; }
 
+        public ICollection<Seccion> Secciones { get; set; }
+        public ICollection<TemasCurso> TemasCurso { get; set; }
         public ICollection<EstudianteGrado> Estudiantes { get; set; }
     }
 }

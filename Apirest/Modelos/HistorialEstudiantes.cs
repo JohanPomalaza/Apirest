@@ -20,6 +20,9 @@ namespace Apirest.Modelos
         [Column("id_grado")]
         public int? IdGrado { get; set; }
 
+        [Column("id_seccion")]
+        public int? IdSeccion { get; set; }
+
         [Column("id_anio_escolar")]
         public int? IdAnioEscolar { get; set; }
 

@@ -3,24 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\johan\\source\\repos\\Apirest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\controllers\\temascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\temascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\controllers\\ramascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\ramascursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\temascurso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\temascurso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\historialramas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\historialramas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\appdbcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\appdbcontext .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|c:\\users\\johan\\source\\repos\\apirest\\apirest\\modelos\\recaptcharesponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7C65F31-CFD0-4EA1-BA6B-2B8910D80F0A}|Apirest\\Apirest.csproj|solutionrelative:apirest\\modelos\\recaptcharesponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -45,68 +37,46 @@
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "TemasCurso.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\TemasCurso.cs",
-              "RelativeDocumentMoniker": "Apirest\\Modelos\\TemasCurso.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\TemasCurso.cs",
-              "RelativeToolTip": "Apirest\\Modelos\\TemasCurso.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T02:34:58.059Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "HistorialRamas.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\HistorialRamas.cs",
-              "RelativeDocumentMoniker": "Apirest\\Modelos\\HistorialRamas.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\HistorialRamas.cs",
-              "RelativeToolTip": "Apirest\\Modelos\\HistorialRamas.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "RecaptchaResponse.cs",
+              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\RecaptchaResponse.cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\RecaptchaResponse.cs",
+              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\RecaptchaResponse.cs",
+              "RelativeToolTip": "Apirest\\Modelos\\RecaptchaResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T02:34:39.908Z",
+              "WhenOpened": "2025-07-10T01:58:47.782Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LoginRequest.cs",
+              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\LoginRequest.cs",
+              "RelativeDocumentMoniker": "Apirest\\Modelos\\LoginRequest.cs",
+              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\LoginRequest.cs",
+              "RelativeToolTip": "Apirest\\Modelos\\LoginRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T03:09:09.943Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "RamasCursoController.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\RamasCursoController.cs",
-              "RelativeDocumentMoniker": "Apirest\\Controllers\\RamasCursoController.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\RamasCursoController.cs",
-              "RelativeToolTip": "Apirest\\Controllers\\RamasCursoController.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAowCIAAABEAAAAAAAAAA==",
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "Apirest\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "Apirest\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAA1wBoAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T02:28:26.491Z",
+              "WhenOpened": "2025-07-09T02:36:36.232Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "TemasCursoController.cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\TemasCursoController.cs",
-              "RelativeDocumentMoniker": "Apirest\\Controllers\\TemasCursoController.cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Controllers\\TemasCursoController.cs",
-              "RelativeToolTip": "Apirest\\Controllers\\TemasCursoController.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAYwB0AAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T02:22:05.268Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AppDbContext .cs",
-              "DocumentMoniker": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\AppDbContext .cs",
-              "RelativeDocumentMoniker": "Apirest\\Modelos\\AppDbContext .cs",
-              "ToolTip": "C:\\Users\\johan\\source\\repos\\Apirest\\Apirest\\Modelos\\AppDbContext .cs",
-              "RelativeToolTip": "Apirest\\Modelos\\AppDbContext .cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAA3wB4AAAA/AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-01T03:01:02.332Z"
             }
           ]
         }

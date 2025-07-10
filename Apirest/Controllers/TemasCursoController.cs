@@ -21,7 +21,17 @@ namespace Apirest.Controllers
             var temas = await _context.TemasCurso
                 .Include(t => t.RamaCurso)
                 .Include(t => t.Grado)
+                .Select(t => new
+                {
+                    t.IdTema,
+                    t.Nombre,
+                    t.Orden,
+                    t.Estado,
+                    Rama = t.RamaCurso.Nombre,
+                    Grado = t.Grado.NombreGrado
+                })
                 .ToListAsync();
+
             return Ok(temas);
         }
 
@@ -30,9 +40,11 @@ namespace Apirest.Controllers
         public async Task<IActionResult> GetTemasPorRama(int idRama)
         {
             var temas = await _context.TemasCurso
-                .Where(t => t.IdRama == idRama && t.Estado == true)
+                .Where(t => t.IdRama == idRama && t.Estado)
                 .Include(t => t.Grado)
+                .OrderBy(t => t.Orden)
                 .ToListAsync();
+
             return Ok(temas);
         }
 
@@ -41,9 +53,11 @@ namespace Apirest.Controllers
         public async Task<IActionResult> GetTemasPorGrado(int idGrado)
         {
             var temas = await _context.TemasCurso
-                .Where(t => t.IdGrado == idGrado)
+                .Where(t => t.IdGrado == idGrado && t.Estado)
                 .Include(t => t.RamaCurso)
+                .OrderBy(t => t.Orden)
                 .ToListAsync();
+
             return Ok(temas);
         }
 
@@ -52,8 +66,10 @@ namespace Apirest.Controllers
         public async Task<IActionResult> GetTemasPorRamaYGrado(int idRama, int idGrado)
         {
             var temas = await _context.TemasCurso
-                .Where(t => t.IdRama == idRama && t.IdGrado == idGrado)
+                .Where(t => t.IdRama == idRama && t.IdGrado == idGrado && t.Estado)
+                .OrderBy(t => t.Orden)
                 .ToListAsync();
+
             return Ok(temas);
         }
 
@@ -61,91 +77,82 @@ namespace Apirest.Controllers
         [HttpPost("{idUsuario}")]
         public async Task<IActionResult> CrearTema(int idUsuario, [FromBody] TemaCrearDTO dto)
         {
-            // Verificar que la rama y grado existen (opcional pero recomendado)
-            var rama = await _context.RamasCurso.FindAsync(dto.IdRama);
-            if (rama == null)
-                return NotFound("Rama no encontrada");
+            if (string.IsNullOrWhiteSpace(dto.Nombre) || dto.Orden <= 0)
+                return BadRequest("Nombre y orden del tema son requeridos.");
 
-            var grado = await _context.Grados.FindAsync(dto.IdGrado);
-            if (grado == null)
-                return NotFound("Grado no encontrado");
+            if (!await _context.RamasCurso.AnyAsync(r => r.IdRama == dto.IdRama))
+                return NotFound("Rama no encontrada.");
+
+            if (!await _context.Grados.AnyAsync(g => g.IdGrado == dto.IdGrado))
+                return NotFound("Grado no encontrado.");
 
             var tema = new TemasCurso
             {
                 Nombre = dto.Nombre,
                 IdRama = dto.IdRama,
                 IdGrado = dto.IdGrado,
+                Orden = dto.Orden,
                 Estado = true
             };
 
             _context.TemasCurso.Add(tema);
             await _context.SaveChangesAsync();
 
-            var historial = new HistorialTemas
+            _context.HistorialTemas.Add(new HistorialTemas
             {
                 IdTema = tema.IdTema,
-                Accion = "Creado",
+                Accion = "CREADO",
                 NombreAnterior = null,
                 NombreNuevo = tema.Nombre,
                 IdRamaAnterior = null,
-                IdRamaNueva = tema.IdRama,
+                IdRamaNueva = dto.IdRama,
                 FechaCambio = DateTime.Now,
-                IdUsuario = idUsuario
+                IdUsuario = idUsuario,
+                EstadoAnterior = null,
+                EstadoNuevo = true
+            });
 
-            };
-
-            _context.HistorialTemas.Add(historial);
             await _context.SaveChangesAsync();
-
             return Ok(tema);
         }
 
         [HttpPut("{id}/{idUsuario}")]
-        public async Task<IActionResult> EditarTemaSimple(int id, int idUsuario, [FromBody] TemaEditarDTO temaDto)
+        public async Task<IActionResult> EditarTema(int id, int idUsuario, [FromBody] TemaEditarDTO dto)
         {
-            if (id != temaDto.IdTema)
-                return BadRequest("El ID no coincide");
-            var temaAntes = await _context.TemasCurso.AsNoTracking().FirstOrDefaultAsync(r => r.IdTema == id);
+            if (id != dto.IdTema)
+                return BadRequest("El ID no coincide con el tema.");
+
+            var temaAntes = await _context.TemasCurso.AsNoTracking().FirstOrDefaultAsync(t => t.IdTema == id);
             if (temaAntes == null)
-                return NotFound("Tema no encontrado");
+                return NotFound("Tema no encontrado.");
 
+            if (!await _context.RamasCurso.AnyAsync(r => r.IdRama == dto.IdRama))
+                return NotFound("Rama no encontrada.");
 
-            var temaExistente = await _context.TemasCurso.FindAsync(id);
-            if (temaExistente == null)
-                return NotFound("Tema no encontrado");
-
-            var nombreAnterior = temaExistente.Nombre;
-            var idRamaAnterior = temaExistente.IdRama;
-
-            temaExistente.Nombre = temaDto.Nombre;
-
-            var nuevaRama = await _context.RamasCurso.FindAsync(temaDto.IdRama);
-            if (nuevaRama == null)
-                return NotFound("Rama no encontrada");
-
-            temaExistente.IdRama = temaDto.IdRama;
+            var tema = await _context.TemasCurso.FindAsync(id);
+            tema.Nombre = dto.Nombre;
+            tema.IdRama = dto.IdRama;
+            tema.Orden = dto.Orden;
 
             await _context.SaveChangesAsync();
 
-            var historial = new HistorialTemas
+            _context.HistorialTemas.Add(new HistorialTemas
             {
-                IdTema = temaExistente.IdTema,
-                Accion = "Editado",
-                NombreAnterior = nombreAnterior,
-                NombreNuevo = temaExistente.Nombre,
-                IdRamaAnterior = idRamaAnterior,
-                IdRamaNueva = temaExistente.IdRama,
+                IdTema = tema.IdTema,
+                Accion = "EDITADO",
+                NombreAnterior = temaAntes.Nombre,
+                NombreNuevo = dto.Nombre,
+                IdRamaAnterior = temaAntes.IdRama,
+                IdRamaNueva = dto.IdRama,
                 FechaCambio = DateTime.Now,
                 IdUsuario = idUsuario,
                 EstadoAnterior = temaAntes.Estado,
-                EstadoNuevo = temaExistente.Estado
+                EstadoNuevo = tema.Estado
+            });
 
-            };
-
-            _context.HistorialTemas.Add(historial);
             await _context.SaveChangesAsync();
 
-            return Ok(new { mensaje = "Tema actualizado correctamente" });
+            return Ok(new { mensaje = "Tema actualizado correctamente." });
         }
 
         // DELETE: api/TemasCurso/5
@@ -203,6 +210,23 @@ namespace Apirest.Controllers
                 .ToListAsync();
 
             return Ok(historial);
+        }
+        [HttpGet("grados/porNivel/{idNivel}")]
+        public async Task<ActionResult> ObtenerGradosPorNivel(int idNivel)
+        {
+            var grados = await _context.Grados
+                .Where(g => g.Estado && g.IdNivel == idNivel)
+                .Select(g => new
+                {
+                    g.IdGrado,
+                    g.NombreGrado
+                })
+                .ToListAsync();
+
+            if (grados.Count == 0)
+                return NotFound(new { mensaje = "No se encontraron grados para el nivel indicado." });
+
+            return Ok(grados);
         }
     }
 }

@@ -180,3 +180,4 @@ D:\Alexander\Documents\GitHub\Apirest\Apirest\obj\Debug\net8.0\refint\Apirest.dl
 D:\Alexander\Documents\GitHub\Apirest\Apirest\obj\Debug\net8.0\Apirest.pdb
 D:\Alexander\Documents\GitHub\Apirest\Apirest\obj\Debug\net8.0\Apirest.genruntimeconfig.cache
 D:\Alexander\Documents\GitHub\Apirest\Apirest\obj\Debug\net8.0\ref\Apirest.dll
+C:\Users\johan\source\repos\Apirest\Apirest\bin\Debug\net8.0\Newtonsoft.Json.dll

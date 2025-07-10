@@ -4,5 +4,6 @@
     {
         public int IdRama { get; set; }
         public int IdGrado { get; set; }
+        public int IdSeccion { get; set; }
     }
 }

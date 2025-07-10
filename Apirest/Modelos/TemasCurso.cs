@@ -17,6 +17,9 @@ namespace Apirest.Modelos
         [Column("id_grado")]
         public int IdGrado { get; set; }
 
+        [Column("orden")]
+        public int? Orden { get; set; }
+
         /*[ForeignKey("Grados")]
         [Column("id_grado")]
         public int IdGrado { get; set; }*/

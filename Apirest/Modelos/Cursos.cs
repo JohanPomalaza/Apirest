@@ -9,6 +9,8 @@ namespace Apirest.Modelos
         [Key]
         [Column("id_curso")]
         public int IdCurso { get; set; }
+        [Column("id_nivel")]
+        public int IdNivel { get; set; }
 
         [Required]
         [MaxLength(100)]

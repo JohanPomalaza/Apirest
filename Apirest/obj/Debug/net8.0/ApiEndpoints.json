@@ -229,14 +229,19 @@
   },
   {
     "ContainingType": "Apirest.Controllers.CursoController",
-    "Method": "GetAlumnosPorGrado",
-    "RelativePath": "api/Curso/grado/{id_grado}/anio/{id_anio}/alumnos",
+    "Method": "GetAlumnosPorGradoSeccion",
+    "RelativePath": "api/Curso/grado/{id_grado}/seccion/{id_seccion}/anio/{id_anio}/alumnos",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "id_grado",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "id_seccion",
         "Type": "System.Int32",
         "IsRequired": true
       },
@@ -381,6 +386,27 @@
   },
   {
     "ContainingType": "Apirest.Controllers.CursoController",
+    "Method": "GetTemasSinNota",
+    "RelativePath": "api/Curso/temas/pendientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id_usuario_estudiante",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "id_rama",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.CursoController",
     "Method": "GetNotasPorCurso",
     "RelativePath": "api/Curso/usuario/{id_usuario}/curso/{id_curso}/notas",
     "HttpMethod": "GET",
@@ -424,37 +450,7 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "Apirest.Controllers.DocentesController",
-    "Method": "GetDocentes",
-    "RelativePath": "api/Docentes",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[Apirest.Modelos.DocenteDto, Apirest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Apirest.Controllers.DocentesController",
@@ -558,6 +554,32 @@
   },
   {
     "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetResumenDocente",
+    "RelativePath": "api/Docentes/{idDocente}/resumen",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idDocente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetAniosEscolares",
+    "RelativePath": "api/Docentes/anios",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
     "Method": "ActualizarAsignacion",
     "RelativePath": "api/Docentes/asignacion/{idAsignacion}",
     "HttpMethod": "PUT",
@@ -572,6 +594,54 @@
       {
         "Name": "dto",
         "Type": "Apirest.Modelos.AsignacionActualizarDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "InactivarAsignacion",
+    "RelativePath": "api/Docentes/asignacion/{idAsignacion}/inactivar",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAsignacion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetRamasPorCurso",
+    "RelativePath": "api/Docentes/cursos/{idCurso}/ramas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCurso",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetCursosPorNivel",
+    "RelativePath": "api/Docentes/cursos/porNivel/{idNivel}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idNivel",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -596,6 +666,68 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetSeccionesPorGrado",
+    "RelativePath": "api/Docentes/grados/{idGrado}/secciones",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idGrado",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetDocentes",
+    "RelativePath": "api/Docentes/lista",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Apirest.Modelos.DocenteDto, Apirest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetNiveles",
+    "RelativePath": "api/Docentes/niveles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.DocentesController",
+    "Method": "GetGradosYSeccionesPorNivel",
+    "RelativePath": "api/Docentes/porNivel/{idNivel}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idNivel",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Apirest.Controllers.DocentesController",
@@ -700,6 +832,22 @@
     "Method": "ObtenerHistorialEstudiante",
     "RelativePath": "api/Estudiantes/{idEstudiante}/historial",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idEstudiante",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.EstudiantesController",
+    "Method": "InactivarEstudiante",
+    "RelativePath": "api/Estudiantes/{idEstudiante}/inactivar",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -854,7 +1002,7 @@
   },
   {
     "ContainingType": "Apirest.Controllers.TemasCursoController",
-    "Method": "EditarTemaSimple",
+    "Method": "EditarTema",
     "RelativePath": "api/TemasCurso/{id}/{idUsuario}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -871,7 +1019,7 @@
         "IsRequired": true
       },
       {
-        "Name": "temaDto",
+        "Name": "dto",
         "Type": "Apirest.Modelos.TemaEditarDTO",
         "IsRequired": true
       }
@@ -915,6 +1063,22 @@
       {
         "Name": "dto",
         "Type": "Apirest.Modelos.TemaCrearDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Apirest.Controllers.TemasCursoController",
+    "Method": "ObtenerGradosPorNivel",
+    "RelativePath": "api/TemasCurso/grados/porNivel/{idNivel}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idNivel",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

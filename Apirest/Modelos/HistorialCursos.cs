@@ -14,13 +14,13 @@ namespace Apirest.Modelos
         public int IdCurso { get; set; }
 
         [Column("usuario_responsable")]
-        public int UsuarioResponsable { get; set; }
+        public int? UsuarioResponsable { get; set; }
 
         [Column("nombre_anterior")]
-        public string NombreAnterior { get; set; }
+        public string? NombreAnterior { get; set; }
 
         [Column("nombre_nuevo")]
-        public string NombreNuevo { get; set; }
+        public string? NombreNuevo { get; set; }
 
 
         [Column("accion")]

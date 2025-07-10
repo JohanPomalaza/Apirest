@@ -29,6 +29,7 @@ namespace Apirest.Modelos
         public DbSet<HistorialTemas> HistorialTemas { get; set; }
         public DbSet<HistorialEstudiantes> HistorialEstudiantes { get; set; }
         public DbSet<Notificacion> Notificaciones { get; set; }
+        public DbSet<Seccion> Secciones { get; set; }
 
         public DbSet<HistorialDocentes> HistorialDocentes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -76,6 +77,10 @@ namespace Apirest.Modelos
                 .WithMany(u => u.AsignacionesComoAsignador)
                 .HasForeignKey(a => a.IdAsignador)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AsignacionesDocente>()
+                .Property(a => a.IdSeccion)
+                .HasColumnName("id_seccion");
         }
     }
 }

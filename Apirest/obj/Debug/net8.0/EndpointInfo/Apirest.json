@@ -232,27 +232,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -300,7 +280,7 @@
         }
       }
     },
-    "/api/Curso/grado/{id_grado}/anio/{id_anio}/alumnos": {
+    "/api/Curso/grado/{id_grado}/seccion/{id_seccion}/anio/{id_anio}/alumnos": {
       "get": {
         "tags": [
           "Curso"
@@ -308,6 +288,15 @@
         "parameters": [
           {
             "name": "id_grado",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id_seccion",
             "in": "path",
             "required": true,
             "schema": {
@@ -619,6 +608,36 @@
         }
       }
     },
+    "/api/Curso/temas/pendientes": {
+      "get": {
+        "tags": [
+          "Curso"
+        ],
+        "parameters": [
+          {
+            "name": "id_usuario_estudiante",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id_rama",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Curso/notas/historial": {
       "get": {
         "tags": [
@@ -710,7 +729,7 @@
         }
       }
     },
-    "/api/Docentes": {
+    "/api/Docentes/lista": {
       "get": {
         "tags": [
           "Docentes"
@@ -746,7 +765,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/Docentes": {
       "post": {
         "tags": [
           "Docentes"
@@ -812,6 +833,29 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{idDocente}/inactivar": {
+      "put": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idDocente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -952,29 +996,6 @@
         }
       }
     },
-    "/api/Docentes/{idDocente}/inactivar": {
-      "put": {
-        "tags": [
-          "Docentes"
-        ],
-        "parameters": [
-          {
-            "name": "idDocente",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Docentes/ramas": {
       "get": {
         "tags": [
@@ -1035,6 +1056,168 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Docentes/grados/{idGrado}/secciones": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idGrado",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/porNivel/{idNivel}": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idNivel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/niveles": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/anios": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/cursos/porNivel/{idNivel}": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idNivel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/cursos/{idCurso}/ramas": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idCurso",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/asignacion/{idAsignacion}/inactivar": {
+      "put": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idAsignacion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docentes/{idDocente}/resumen": {
+      "get": {
+        "tags": [
+          "Docentes"
+        ],
+        "parameters": [
+          {
+            "name": "idDocente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -1198,6 +1381,29 @@
     },
     "/api/Estudiantes/{idEstudiante}/historial": {
       "get": {
+        "tags": [
+          "Estudiantes"
+        ],
+        "parameters": [
+          {
+            "name": "idEstudiante",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Estudiantes/{idEstudiante}/inactivar": {
+      "put": {
         "tags": [
           "Estudiantes"
         ],
@@ -1654,6 +1860,29 @@
         }
       }
     },
+    "/api/TemasCurso/grados/porNivel/{idNivel}": {
+      "get": {
+        "tags": [
+          "TemasCurso"
+        ],
+        "parameters": [
+          {
+            "name": "idNivel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -1706,6 +1935,10 @@
           "idGrado": {
             "type": "integer",
             "format": "int32"
+          },
+          "idSeccion": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1721,11 +1954,19 @@
             "type": "integer",
             "format": "int32"
           },
-          "idRama": {
+          "idRamas": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "idGrado": {
             "type": "integer",
             "format": "int32"
           },
-          "idGrado": {
+          "idSeccion": {
             "type": "integer",
             "format": "int32"
           },
@@ -1767,9 +2008,25 @@
             "type": "string",
             "nullable": true
           },
+          "idSeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "seccionNombre": {
+            "type": "string",
+            "nullable": true
+          },
           "idAnioEscolar": {
             "type": "integer",
             "format": "int32"
+          },
+          "idCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cursoNombre": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1787,6 +2044,14 @@
           },
           "estado": {
             "type": "boolean"
+          },
+          "idSeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usuarioResponsable": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1812,6 +2077,10 @@
         "type": "object",
         "properties": {
           "idCurso": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idNivel": {
             "type": "integer",
             "format": "int32"
           },
@@ -1981,6 +2250,10 @@
           "idGrado": {
             "type": "integer",
             "format": "int32"
+          },
+          "orden": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1997,6 +2270,10 @@
             "nullable": true
           },
           "idRama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orden": {
             "type": "integer",
             "format": "int32"
           }

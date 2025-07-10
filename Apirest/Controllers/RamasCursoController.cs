@@ -20,9 +20,16 @@ namespace Apirest.Controllers
         public async Task<IActionResult> GetTodasRamas()
         {
             var ramas = await _context.RamasCurso
-               .Include(r => r.Curso)
-               .Where(r => r.Estado == true)
-               .ToListAsync();
+                .Include(r => r.Curso)
+                .Where(r => r.Estado == true)
+                .Select(r => new
+                {
+                    r.IdRama,
+                    r.Nombre,
+                    r.IdCurso,
+                    CursoNombre = r.Curso.NombreCurso
+                })
+                .ToListAsync();
 
             return Ok(ramas);
         }
@@ -31,8 +38,12 @@ namespace Apirest.Controllers
         [HttpGet("porCurso/{idCurso}")]
         public async Task<IActionResult> GetRamasPorCurso(int idCurso)
         {
+            if (!await _context.Cursos.AnyAsync(c => c.IdCurso == idCurso && c.Estado))
+                return NotFound("Curso no encontrado o inactivo.");
+
             var ramas = await _context.RamasCurso
-                .Where(r => r.IdCurso == idCurso && r.Estado == true)
+                .Where(r => r.IdCurso == idCurso && r.Estado)
+                .Select(r => new { r.IdRama, r.Nombre })
                 .ToListAsync();
 
             return Ok(ramas);
@@ -43,9 +54,10 @@ namespace Apirest.Controllers
         public async Task<IActionResult> CrearRama([FromBody] RamaCursoCrearDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Nombre) || dto.IdCurso <= 0 || dto.IdUsuario <= 0)
-            {
-                return BadRequest("IdCurso, NombreRama e IdUsuario son requeridos.");
-            }
+                return BadRequest("IdCurso, Nombre e IdUsuario son requeridos.");
+
+            if (!await _context.Cursos.AnyAsync(c => c.IdCurso == dto.IdCurso))
+                return NotFound("El curso especificado no existe.");
 
             var nuevaRama = new RamasCurso
             {
@@ -57,15 +69,18 @@ namespace Apirest.Controllers
             _context.RamasCurso.Add(nuevaRama);
             await _context.SaveChangesAsync();
 
-            var historial = new HistorialRamas
+            _context.HistorialRamas.Add(new HistorialRamas
             {
                 IdRama = nuevaRama.IdRama,
-                FechaCambio = DateTime.Now,
                 Accion = "CREADO",
+                NombreAnterior = null,
+                NombreNuevo = nuevaRama.Nombre,
+                EstadoAnterior = null,
+                EstadoNuevo = true,
+                FechaCambio = DateTime.Now,
                 IdUsuario = dto.IdUsuario
-            };
+            });
 
-            _context.HistorialRamas.Add(historial);
             await _context.SaveChangesAsync();
 
             return Ok(nuevaRama);
@@ -77,9 +92,11 @@ namespace Apirest.Controllers
         {
             var ramaAntes = await _context.RamasCurso.AsNoTracking().FirstOrDefaultAsync(r => r.IdRama == id);
             if (ramaAntes == null)
-                return NotFound("Rama no encontrada");
+                return NotFound("Rama no encontrada.");
 
-            // Actualiza los campos permitidos
+            if (!await _context.Cursos.AnyAsync(c => c.IdCurso == dto.IdCurso))
+                return NotFound("Curso destino no existe.");
+
             var rama = new RamasCurso
             {
                 IdRama = id,
@@ -91,51 +108,50 @@ namespace Apirest.Controllers
             _context.Entry(rama).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            var historial = new HistorialRamas
+            _context.HistorialRamas.Add(new HistorialRamas
             {
                 IdRama = rama.IdRama,
-                Accion = "Editado",
+                Accion = "EDITADO",
                 NombreAnterior = ramaAntes.Nombre,
-                NombreNuevo = rama.Nombre,
+                NombreNuevo = dto.Nombre,
                 EstadoAnterior = ramaAntes.Estado,
                 EstadoNuevo = rama.Estado,
                 FechaCambio = DateTime.Now,
                 IdUsuario = idUsuario
-            };
+            });
 
-            _context.HistorialRamas.Add(historial);
             await _context.SaveChangesAsync();
 
             return Ok(rama);
         }
+
         [HttpDelete("{id}/{idUsuario}")]
         public async Task<IActionResult> EliminarRama(int id, int idUsuario)
         {
             var rama = await _context.RamasCurso.FindAsync(id);
-            if (rama == null)
-                return NotFound();
+            if (rama == null) return NotFound();
 
             bool estadoAnterior = rama.Estado;
             rama.Estado = false;
+
             _context.Entry(rama).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            var historial = new HistorialRamas
+            _context.HistorialRamas.Add(new HistorialRamas
             {
                 IdRama = rama.IdRama,
-                Accion = "Eliminado",
+                Accion = "ELIMINADO",
                 NombreAnterior = rama.Nombre,
                 NombreNuevo = rama.Nombre,
                 EstadoAnterior = estadoAnterior,
-                EstadoNuevo = rama.Estado,
+                EstadoNuevo = false,
                 FechaCambio = DateTime.Now,
                 IdUsuario = idUsuario
-            };
+            });
 
-            _context.HistorialRamas.Add(historial);
             await _context.SaveChangesAsync();
 
-            return Ok("Rama eliminada (lógicamente)");
+            return Ok("Rama eliminada lógicamente.");
         }
 
         // GET: api/RamasCurso/historial/5

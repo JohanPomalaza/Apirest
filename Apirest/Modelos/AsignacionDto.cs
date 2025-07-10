@@ -10,6 +10,10 @@
 
         public int IdGrado { get; set; }
         public string GradoNombre { get; set; }
+        public int IdSeccion { get; set; }
+        public string SeccionNombre { get; set; }
         public int IdAnioEscolar { get; set; }
+        public int IdCurso { get; set; }
+        public string CursoNombre { get; set; }
     }
 }

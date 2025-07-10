@@ -16,6 +16,9 @@ namespace Apirest.Modelos
         [Column("id_grado")]
         public int IdGrado { get; set; }
 
+        [Column("id_seccion")]
+        public int IdSeccion { get; set; }
+
         [Column("id_anio_escolar")]
         public int IdAnioEscolar { get; set; }
         public bool Estado { get; set; }
@@ -27,8 +30,14 @@ namespace Apirest.Modelos
         [ForeignKey(nameof(IdGrado))]
         public Grado Grado { get; set; }
 
+        [ForeignKey(nameof(IdSeccion))]
+        public Seccion Seccion { get; set; }
+
         [ForeignKey(nameof(IdAnioEscolar))]
         public AnioEscolar AnioEscolar { get; set; }
+
+        
+
 
     }
 }
